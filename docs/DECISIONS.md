@@ -11,8 +11,8 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Repo: public `DangoKangoo/william-odriscoll`, served at `dangokangoo.github.io/william-odriscoll`. Custom domain later.
 - One page, four sections: Hero, Work, Services, Contact.
 - Visual direction: light, off-white background, deep golf-green accent, Manrope (display) + Inter (body).
-- Hero art: generated topographic contour map of a green, with a flag and a ball flight that draws itself once.
-- Motion: subtle. Scroll fade-ups, card hover lift, one-time ball-flight draw. Everything is off under `prefers-reduced-motion`.
+- Hero art: generated topographic contour map of a green, with a flag and ~~a ball flight that draws itself once~~ looping shots (see "Hero shot loop").
+- ~~Motion: subtle. Scroll fade-ups, card hover lift, one-time ball-flight draw. Everything is off under `prefers-reduced-motion`.~~ Superseded 2026-09-22, see "Hero shot loop".
 - Extras: service icons, dimple texture on Contact, one fairway divider under the hero.
   **Why:** the stats strip was skipped until there are enough sites (5+) for the numbers to impress.
 - Showcase: a live iframe in a browser frame when the site allows framing from this origin, otherwise a screenshot. A badge always says which is showing.
@@ -26,3 +26,13 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Branches: feature branches with PRs into a protected `main` that requires CI to pass.
 - Copy is drafted by Claude and reviewed by William before it ships.
 - Out of scope: analytics, contact form, custom domain, case studies, personal bio or CV.
+
+## 2026-09-22: Hero shot loop
+
+- Motion: subtle. Scroll fade-ups, card hover lift, and a looping hero shot. Everything is off under `prefers-reduced-motion`.
+- Hero shots loop one at a time, and each shot is new and random: it starts somewhere along the left side of the art, flies a random arc height, and lands on the green around the pin.
+- Each shot: the trail draws as the ball flies (about 1.6s), the ball rolls a short way toward the pin, holds, then the ball and trail fade together before the next shot. About 4s per shot.
+- Every shot lands on the green. No misses, no hole-in-one.
+- The loop pauses when the hero is off screen or the tab is hidden.
+  **Why:** it saves battery and CPU for an effect nobody is looking at.
+- Reduced motion or no JavaScript: one still, finished shot.
