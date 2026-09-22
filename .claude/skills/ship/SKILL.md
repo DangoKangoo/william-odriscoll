@@ -8,21 +8,11 @@ description: Finish a task by opening a pull request and reviewing it. Use whene
 Run this at the end of every task. The companion to `align`: `align` agrees the
 scope before building, and `ship` checks the result before it merges.
 
-## Step 1: Ask if we're ready to PR
+Live site: https://dangokangoo.github.io/william-odriscoll/
 
-Never open a PR without asking. Use `AskUserQuestion` with a two-line summary
-of what changed:
+## Step 1: Verify locally
 
-- "Yes, open the PR" (Recommended when checks pass)
-- "Not yet": ask what's left, finish it, then come back to this step
-- "Change something first": make the change, then come back to this step
-
-If local checks (Step 2) are already failing, say so in the question and
-recommend "Not yet".
-
-## Step 2: Verify locally
-
-Run all of these and stop on the first failure. Report it, don't work around it.
+Run all of these first, so the question in Step 2 is based on real results.
 
 ```sh
 npm run format:check
@@ -33,18 +23,39 @@ npm run build
 If content in `src/content/sites/` changed, also confirm the matching
 screenshot and `src/data/embeds.json` entry exist (`npm run shots -- <slug>`).
 
+Don't work around a failure. Note it for Step 2.
+
+## Step 2: Ask if we're ready to PR
+
+Never open a PR without asking. Use `AskUserQuestion` with a two-line summary
+of what changed and the Step 1 results:
+
+- "Yes, open the PR" (Recommended only when every check passed)
+- "Not yet": ask what's left, finish it, then go back to Step 1
+- "Change something first": make the change, then go back to Step 1
+
+If a check failed, show the failing lines in the question and recommend
+"Not yet" or "Change something first".
+
 ## Step 3: Branch and commit
 
+- Run `git status`. If nothing has changed, say so and stop. There's nothing to ship.
 - Never commit to `main` (it's protected). If on `main`, create a branch named
   `<type>/<short-topic>`, where type is `feat`, `fix`, `ci`, `docs`, `chore` or `style`.
 - Group related changes into logical commits. The message says why, not just what.
-- Check `git status` for stray files (screenshots from previews, `.lighthouseci`,
-  scratch scripts) before committing. Never commit secrets or `.env` files.
-- The global gitignore excludes `.claude/`, so skills need `git add -f`.
+- Check for stray files (preview screenshots, `.lighthouseci`, scratch scripts)
+  before committing. Never commit secrets or `.env` files.
+- The global gitignore excludes `.claude/`. Force-add only the specific skill
+  file (`git add -f .claude/skills/<name>/SKILL.md`), never the whole folder,
+  because `.claude/settings.local.json` must stay uncommitted.
 
 ## Step 4: Open the PR
 
-Push the branch and create the PR with `gh pr create --base main`. Body:
+1. Push: `git push -u origin <branch>` the first time, `git push` after that.
+2. Check for an existing PR: `gh pr view --json number,url`. If one exists,
+   the push already updated it. Update its body with `gh pr edit` if the
+   summary changed, and skip to Step 5.
+3. Otherwise create it with `gh pr create --base main`. Body:
 
 ```
 ## Changed
@@ -66,7 +77,8 @@ Title follows the commit convention (`feat: ...`). No em dashes anywhere.
 
 Default: spawn an independent reviewer with the `Agent` tool
 (`subagent_type: general-purpose`) so the review isn't done by the same context
-that wrote the code. Give it:
+that wrote the code. Tell it to review only (no edits, commits, comments or
+merges) and give it:
 
 - The PR number and `gh pr diff <n>` output (or tell it to run that)
 - The task goal and the relevant `docs/DECISIONS.md` entries
@@ -85,24 +97,37 @@ that wrote the code. Give it:
 If the Agent tool isn't available, review it yourself against the same checklist
 (the `code-review` skill works well for this), and say it was a self-review.
 
-Then verify each finding yourself before reporting it. Drop anything that doesn't hold up.
+Verify each finding yourself before reporting it. Drop anything that doesn't
+hold up, and say how many you dropped.
 
 ## Step 6: Report, fix, wait for CI
 
-1. Post the verified findings as one PR comment (`gh pr comment <n>`), with the
-   reviewer type (agent or self) noted.
+1. Post the verified findings as one PR comment (`gh pr comment <n>`), noting
+   whether the reviewer was an agent or a self-review.
 2. Show William the findings, most severe first, and ask with `AskUserQuestion`
    which to fix: all / pick some / none.
-3. Push fixes to the same branch as new commits.
-4. Wait for CI (`gh pr checks <n> --watch`). If a check fails, show the failing
-   log lines and fix it. Never mark a failure as passing.
+3. Push fixes to the same branch as new commits. If the fixes are more than
+   trivial, run Step 5 again on the new commits.
+4. Wait for CI. Checks can take a few seconds to register after a push, so if
+   `gh pr checks <n>` reports no checks yet, wait briefly and retry. Then run
+   `gh pr checks <n> --watch`.
+5. If a check fails, show William the failing log lines
+   (`gh run view <run-id> --log-failed`) and ask before fixing anything that
+   isn't an obvious slip in this PR. Never mark a failure as passing.
 
 ## Step 7: Ask before merging
 
 When CI is green and findings are resolved, ask: "Merge and deploy?"
 
-- "Yes, squash and merge": `gh pr merge <n> --squash --delete-branch`, then
-  watch the Deploy run and confirm the live URL returns 200.
+- "Yes, squash and merge":
+  1. `gh pr merge <n> --squash --delete-branch`
+  2. `git checkout main && git pull`
+  3. Find the deploy: `gh run list --workflow deploy.yml --branch main -L 1`
+  4. `gh run watch <run-id> --exit-status`
+  5. Confirm the live site returns 200:
+     `curl -s -o /dev/null -w "%{http_code}" https://dangokangoo.github.io/william-odriscoll/`
+  6. If the deploy fails, show the failing log lines. If Pages returns 404,
+     check the repo is still public first.
 - "Leave it open": stop and give William the PR link.
 
 ## Rules
