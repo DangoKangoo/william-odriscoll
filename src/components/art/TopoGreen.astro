@@ -128,14 +128,30 @@ const staticShot: Shot = {
     const body = required<SVGCircleElement>("[data-ball-body]");
     const shadow = required<SVGEllipseElement>("[data-ball-shadow]");
 
+    const data = (name: string): string => {
+      const value = svg.dataset[name];
+      if (value === undefined || value === "") {
+        throw new Error(`[TopoGreen] Missing data-* attribute: ${name}`);
+      }
+      return value;
+    };
+    const number = (name: string): number => {
+      const value = Number(data(name));
+      if (!Number.isFinite(value)) {
+        throw new Error(`[TopoGreen] data-* attribute ${name} is not a number`);
+      }
+      return value;
+    };
+
     const area: ShotArea = {
-      pin: { x: Number(svg.dataset.pinX), y: Number(svg.dataset.pinY) },
-      size: Number(svg.dataset.size),
+      pin: { x: number("pinX"), y: number("pinY") },
+      size: number("size"),
     };
 
     // Start on the finished static shot so the handoff from the no-JS markup
     // is a fade, not a jump. Random shots take over from the next loop.
-    let shot: Shot = JSON.parse(svg.dataset.staticShot ?? "");
+    const staticShot: Shot = JSON.parse(data("staticShot"));
+    let shot = staticShot;
     let phaseIndex = PHASES.findIndex(([phase]) => phase === "hold");
     let phaseElapsed = 0;
     let lastTime: number | null = null;
@@ -188,9 +204,23 @@ const staticShot: Shot = {
       frame = requestAnimationFrame(tick);
     }
 
-    // Only runs while the hero is on screen and the tab is visible.
+    // Back to the finished static shot, as reduced-motion visitors see it.
+    function showStatic() {
+      shot = staticShot;
+      phaseIndex = PHASES.findIndex(([phase]) => phase === "hold");
+      phaseElapsed = 0;
+      flight.setAttribute("d", flightPath(staticShot, 1));
+      placeBall(staticShot.rest.x, staticShot.rest.y, 1);
+      shadow.style.opacity = "";
+      group.style.opacity = "1";
+    }
+
+    // Only runs while motion is allowed, the hero is on screen and the tab is visible.
     function sync() {
-      const active = onScreen && document.visibilityState === "visible";
+      const active =
+        !reducedMotion.matches &&
+        onScreen &&
+        document.visibilityState === "visible";
       if (active && !frame) {
         lastTime = null;
         frame = requestAnimationFrame(tick);
@@ -205,16 +235,16 @@ const staticShot: Shot = {
       sync();
     }).observe(svg);
     document.addEventListener("visibilitychange", sync);
+    reducedMotion.addEventListener("change", () => {
+      if (reducedMotion.matches) showStatic();
+      sync();
+    });
   }
 
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-  if (!reducedMotion) {
-    document
-      .querySelectorAll<SVGSVGElement>("[data-topo]")
-      .forEach(startShotLoop);
-  }
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  document
+    .querySelectorAll<SVGSVGElement>("[data-topo]")
+    .forEach(startShotLoop);
 </script>
 
 <style>

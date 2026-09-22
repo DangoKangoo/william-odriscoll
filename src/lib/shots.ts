@@ -14,9 +14,11 @@ export type ShotArea = {
 
 const START_X = [8, 90];
 const START_Y_FRACTION = [0.55, 0.97];
-const LAND_RADIUS = [22, 62];
+const LAND_RADIUS = [26, 62];
 const APEX_HEIGHT = [170, 320];
 const ROLL_FRACTION = [0.2, 0.45];
+/** Closest a resting ball may sit to the pin: ball radius (7) + cup half-width (9) + a visible gap. */
+const MIN_REST_DISTANCE = 22;
 /** Contours are stretched horizontally, so the green is wider than it is tall. */
 const GREEN_ASPECT = 1.18;
 
@@ -47,8 +49,10 @@ export function randomShot(
     y: Math.max(apex, -60),
   };
 
-  // Roll part of the way toward the pin.
-  const roll = between(rand, ROLL_FRACTION);
+  // Roll part of the way toward the pin, stopping short of the cup.
+  const landDistance = Math.hypot(pin.x - land.x, pin.y - land.y);
+  const maxRoll = Math.max(0, 1 - MIN_REST_DISTANCE / landDistance);
+  const roll = Math.min(between(rand, ROLL_FRACTION), maxRoll);
   const rest = {
     x: land.x + (pin.x - land.x) * roll,
     y: land.y + (pin.y - land.y) * roll,
