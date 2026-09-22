@@ -13,6 +13,8 @@
   --color-sand: #e8dcc0;
   --color-on-accent: #f4f7f2;
   --color-on-accent-muted: #b9ccbf;
+  /* Focus ring. Dark sections override it with --color-on-accent to keep 3:1 contrast. */
+  --color-focus: var(--color-accent);
 
   /* Type */
   --font-size-xs: 0.8125rem;
