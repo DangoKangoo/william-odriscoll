@@ -32,7 +32,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Motion: subtle. Scroll fade-ups, card hover lift, and a looping hero shot. Everything is off under `prefers-reduced-motion`.
 - Hero shots loop one at a time, and each shot is new and random: it starts somewhere along the left side of the art, flies a random arc height, and lands on the green around the pin.
 - Each shot: the trail draws as the ball flies (about 1.6s), the ball rolls a short way toward the pin, holds, then the ball and trail fade together before the next shot. About 4s per shot.
-- Every shot lands on the green. No misses, no hole-in-one.
+- ~~Every shot lands on the green. No misses, no hole-in-one.~~ Superseded 2026-09-22, see "Hole in one".
 - The loop pauses when the hero is off screen or the tab is hidden.
   **Why:** it saves battery and CPU for an effect nobody is looking at.
 - Reduced motion or no JavaScript: one still, finished shot.
@@ -72,3 +72,11 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Search Console verification goes through the HTML tag method. The code lives in `site.googleSiteVerification`, and no tag renders while it's empty.
 - No robots.txt: crawlers only read it at the domain root, which this repo doesn't control on github.io. The sitemap is submitted in Search Console instead.
 - `docs/search-setup.md` is the guide for Search Console and Google Business Profile (service-area business).
+
+## 2026-09-22: Hole in one
+
+- Every shot still lands on the green, and about 10% are aces: the ball lands a little short, rolls into the cup and drops out of sight. There are never two aces in a row.
+  **Why "about":** because of the no-repeat rule, the per-shot chance is 1/9, which works out to an average of 10%.
+- The ace celebration (about 1.3s): two soft green rings ripple out from the cup, the flag gives one wave, and a small confetti burst (14 pieces in brand colors) falls and fades.
+- Normal shots are unchanged and still stop at least 22 units from the pin.
+- Reduced motion and no JavaScript: the same still shot, with no aces.

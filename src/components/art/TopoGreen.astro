@@ -1,7 +1,8 @@
 ---
 // Hero illustration: contour map of a green and a flag, with random shots
-// flying in from the left one at a time, on a loop. The markup renders one
-// finished shot, which is what reduced-motion and no-JS visitors see.
+// flying in from the left one at a time, on a loop. About 1 in 10 is a hole in
+// one, with a small celebration. The markup renders one finished shot, which is
+// what reduced-motion and no-JS visitors see.
 import { contourPaths } from "../../lib/topo";
 import { flightPath, type Shot } from "../../lib/shots";
 
@@ -20,7 +21,12 @@ const staticShot: Shot = {
   control: { x: 150, y: 20 },
   land: { x: pin.x - 30, y: pin.y + 10 },
   rest: { x: pin.x - 22, y: pin.y + 8 },
+  ace: false,
 };
+
+// Confetti pieces for the hole-in-one celebration, cycling through brand colors.
+const CONFETTI_PIECES = 14;
+const confettiColors = ["green", "sand", "flag", "white"];
 ---
 
 <svg
@@ -66,10 +72,15 @@ const staticShot: Shot = {
     ))}
   </g>
 
+  <g transform={`translate(${pin.x} ${pin.y})`} aria-hidden="true">
+    <ellipse class="topo__ripple" rx="9" ry="4" data-ripple></ellipse>
+    <ellipse class="topo__ripple" rx="9" ry="4" data-ripple></ellipse>
+  </g>
+
   <g class="topo__pin" transform={`translate(${pin.x} ${pin.y})`}>
     <ellipse class="topo__cup" rx="9" ry="4"></ellipse>
     <line class="topo__pole" x1="0" y1="0" x2="0" y2="-92"></line>
-    <path class="topo__flag" d="M0 -92 L44 -79 L0 -66 Z"></path>
+    <path class="topo__flag" d="M0 -92 L44 -79 L0 -66 Z" data-flag></path>
   </g>
 
   <g data-shot>
@@ -90,11 +101,26 @@ const staticShot: Shot = {
       <circle r="7" data-ball-body></circle>
     </g>
   </g>
+
+  <g transform={`translate(${pin.x} ${pin.y})`} aria-hidden="true">
+    {Array.from({ length: CONFETTI_PIECES }, (_, i) => (
+      <rect
+        class={`topo__confetti topo__confetti--${confettiColors[i % confettiColors.length]}`}
+        x="-3.5"
+        y="-2"
+        width="7"
+        height="4"
+        rx="0.5"
+        data-confetti
+      />
+    ))}
+  </g>
 </svg>
 
 <script>
   import {
     flightPath,
+    nextShotIsAce,
     pointBetween,
     pointOnFlight,
     randomShot,
@@ -102,18 +128,37 @@ const staticShot: Shot = {
     type ShotArea,
   } from "../../lib/shots";
 
-  // Phase lengths in ms. One full shot is about 4s.
-  const PHASES = [
+  // Phase lengths in ms. A normal shot is about 4s; an ace swaps the hold for
+  // the ball dropping in and a short celebration, about 5s.
+  const NORMAL_PHASES = [
     ["flight", 1600],
     ["roll", 600],
     ["hold", 700],
     ["fade", 500],
     ["gap", 400],
   ] as const;
-  type Phase = (typeof PHASES)[number][0];
+  const CELEBRATE_MS = 1300;
+  const ACE_PHASES = [
+    ["flight", 1600],
+    ["roll", 900],
+    ["drop", 250],
+    ["celebrate", CELEBRATE_MS],
+    ["fade", 500],
+    ["gap", 400],
+  ] as const;
+  type Phases = typeof NORMAL_PHASES | typeof ACE_PHASES;
+  type Phase = Phases[number][0];
+
+  const RIPPLE_MAX_RX = 64;
+  const RIPPLE_ASPECT = 4 / 9; // Matches the cup ellipse (rx 9, ry 4).
+  const RIPPLE_STAGGER = 0.22; // Second ring starts this far into the celebration.
+  const CONFETTI_GRAVITY = 260; // viewBox units per second squared.
 
   const easeOutQuad = (t: number) => 1 - (1 - t) * (1 - t);
   const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+  const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
+
+  type ConfettiPiece = { vx: number; vy: number; spin: number };
 
   function startShotLoop(svg: SVGSVGElement) {
     const required = <T extends SVGElement>(selector: string): T => {
@@ -127,6 +172,18 @@ const staticShot: Shot = {
     const ball = required<SVGGElement>("[data-ball]");
     const body = required<SVGCircleElement>("[data-ball-body]");
     const shadow = required<SVGEllipseElement>("[data-ball-shadow]");
+    const flag = required<SVGPathElement>("[data-flag]");
+    const ripples = [
+      ...svg.querySelectorAll<SVGEllipseElement>("[data-ripple]"),
+    ];
+    const confetti = [
+      ...svg.querySelectorAll<SVGRectElement>("[data-confetti]"),
+    ];
+    if (ripples.length === 0 || confetti.length === 0) {
+      throw new Error(
+        "[TopoGreen] Shot loop markup is missing the celebration",
+      );
+    }
 
     const attr = (name: string) =>
       `data-${name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
@@ -154,11 +211,31 @@ const staticShot: Shot = {
     // is a fade, not a jump. Random shots take over from the next loop.
     const staticShot: Shot = JSON.parse(data("staticShot"));
     let shot = staticShot;
-    let phaseIndex = PHASES.findIndex(([phase]) => phase === "hold");
+    let phases: Phases = NORMAL_PHASES;
+    let phaseIndex = phases.findIndex(([phase]) => phase === "hold");
     let phaseElapsed = 0;
     let lastTime: number | null = null;
     let frame = 0;
     let onScreen = false;
+    let pieces: ConfettiPiece[] = [];
+
+    function newShot() {
+      const ace = nextShotIsAce(shot.ace);
+      shot = randomShot(area, { ace });
+      phases = ace ? ACE_PHASES : NORMAL_PHASES;
+      if (ace) {
+        // Upward burst, fanned out, each piece with its own spin.
+        pieces = confetti.map(() => {
+          const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.8;
+          const speed = 120 + Math.random() * 110;
+          return {
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            spin: (Math.random() - 0.5) * 900,
+          };
+        });
+      }
+    }
 
     const placeBall = (x: number, y: number, scale: number) => {
       ball.setAttribute(
@@ -168,6 +245,42 @@ const staticShot: Shot = {
       body.setAttribute("transform", `scale(${scale.toFixed(3)})`);
     };
 
+    function hideCelebration() {
+      ripples.forEach((ring) => (ring.style.opacity = "0"));
+      confetti.forEach((piece) => (piece.style.opacity = "0"));
+      flag.removeAttribute("transform");
+    }
+
+    function renderCelebration(p: number) {
+      const seconds = (p * CELEBRATE_MS) / 1000;
+
+      ripples.forEach((ring, i) => {
+        const t = clamp01((p - i * RIPPLE_STAGGER) / (1 - RIPPLE_STAGGER));
+        const rx = 9 + (RIPPLE_MAX_RX - 9) * easeOutCubic(t);
+        ring.setAttribute("rx", rx.toFixed(1));
+        ring.setAttribute("ry", (rx * RIPPLE_ASPECT).toFixed(1));
+        ring.style.opacity = t > 0 && t < 1 ? String(0.6 * (1 - t)) : "0";
+      });
+
+      // One quick wave in the first half, pivoting on the pole.
+      const wave = p < 0.5 ? Math.sin(p * 4 * Math.PI) * (1 - p * 2) : 0;
+      flag.setAttribute(
+        "transform",
+        `scale(${(1 - 0.22 * wave).toFixed(3)} 1)`,
+      );
+
+      confetti.forEach((el, i) => {
+        const { vx, vy, spin } = pieces[i];
+        const x = vx * seconds;
+        const y = vy * seconds + 0.5 * CONFETTI_GRAVITY * seconds * seconds;
+        el.setAttribute(
+          "transform",
+          `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(spin * seconds).toFixed(0)})`,
+        );
+        el.style.opacity = String(p < 0.6 ? 1 : 1 - (p - 0.6) / 0.4);
+      });
+    }
+
     function render(phase: Phase, p: number) {
       if (phase === "flight") {
         const t = easeOutQuad(p);
@@ -176,12 +289,23 @@ const staticShot: Shot = {
         // Slightly bigger at the top of the arc, as if nearer the viewer.
         placeBall(at.x, at.y, 1 + 0.35 * Math.sin(Math.PI * t));
         shadow.style.opacity = "0";
+        ball.style.opacity = "1";
         group.style.opacity = "1";
+        hideCelebration();
       } else if (phase === "roll") {
-        const at = pointBetween(shot.land, shot.rest, easeOutCubic(p));
+        // Aces keep some pace so the ball visibly runs into the cup.
+        const ease = shot.ace ? easeOutQuad : easeOutCubic;
+        const at = pointBetween(shot.land, shot.rest, ease(p));
         placeBall(at.x, at.y, 1);
         shadow.style.opacity = "";
+      } else if (phase === "drop") {
+        placeBall(shot.rest.x, shot.rest.y, 1 - 0.6 * p);
+        shadow.style.opacity = "0";
+        ball.style.opacity = String(1 - p);
+      } else if (phase === "celebrate") {
+        renderCelebration(p);
       } else if (phase === "fade") {
+        hideCelebration();
         group.style.opacity = String(1 - p);
       } else if (phase === "gap") {
         group.style.opacity = "0";
@@ -194,14 +318,17 @@ const staticShot: Shot = {
       phaseElapsed += dt;
 
       // Advance through any phases that finished since the last frame.
-      while (phaseElapsed >= PHASES[phaseIndex][1]) {
-        render(PHASES[phaseIndex][0], 1);
-        phaseElapsed -= PHASES[phaseIndex][1];
-        phaseIndex = (phaseIndex + 1) % PHASES.length;
-        if (phaseIndex === 0) shot = randomShot(area);
+      while (phaseElapsed >= phases[phaseIndex][1]) {
+        render(phases[phaseIndex][0], 1);
+        phaseElapsed -= phases[phaseIndex][1];
+        phaseIndex += 1;
+        if (phaseIndex === phases.length) {
+          phaseIndex = 0;
+          newShot();
+        }
       }
 
-      const [phase, duration] = PHASES[phaseIndex];
+      const [phase, duration] = phases[phaseIndex];
       render(phase, phaseElapsed / duration);
       frame = requestAnimationFrame(tick);
     }
@@ -209,12 +336,15 @@ const staticShot: Shot = {
     // Back to the finished static shot, as reduced-motion visitors see it.
     function showStatic() {
       shot = staticShot;
-      phaseIndex = PHASES.findIndex(([phase]) => phase === "hold");
+      phases = NORMAL_PHASES;
+      phaseIndex = phases.findIndex(([phase]) => phase === "hold");
       phaseElapsed = 0;
       flight.setAttribute("d", flightPath(staticShot, 1));
       placeBall(staticShot.rest.x, staticShot.rest.y, 1);
       shadow.style.opacity = "";
+      ball.style.opacity = "1";
       group.style.opacity = "1";
+      hideCelebration();
     }
 
     // Only runs while motion is allowed, the hero is on screen and the tab is visible.
@@ -299,5 +429,35 @@ const staticShot: Shot = {
   .topo__ball-shadow {
     fill: var(--color-ink);
     opacity: 0.18;
+  }
+
+  /* Hole-in-one celebration. Hidden until the script animates it. */
+  .topo__ripple {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    opacity: 0;
+  }
+
+  .topo__confetti {
+    opacity: 0;
+  }
+
+  .topo__confetti--green {
+    fill: var(--color-accent);
+  }
+
+  .topo__confetti--sand {
+    fill: var(--color-sand);
+  }
+
+  .topo__confetti--flag {
+    fill: var(--color-flag);
+  }
+
+  .topo__confetti--white {
+    fill: #fff;
+    stroke: var(--color-line);
+    stroke-width: 0.5;
   }
 </style>

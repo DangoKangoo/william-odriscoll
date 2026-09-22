@@ -3,8 +3,17 @@
 
 export type Point = { x: number; y: number };
 
-/** A shot is a quadratic Bezier from `start` to `land` through `control`, then a short roll. */
-export type Shot = { start: Point; control: Point; land: Point; rest: Point };
+/**
+ * A shot is a quadratic Bezier from `start` to `land` through `control`, then a
+ * roll to `rest`. For an ace, `rest` is the pin: the ball rolls into the cup.
+ */
+export type Shot = {
+  start: Point;
+  control: Point;
+  land: Point;
+  rest: Point;
+  ace: boolean;
+};
 
 export type ShotArea = {
   pin: Point;
@@ -21,12 +30,29 @@ const ROLL_FRACTION = [0.2, 0.45];
 const MIN_REST_DISTANCE = 22;
 /** Contours are stretched horizontally, so the green is wider than it is tall. */
 const GREEN_ASPECT = 1.18;
+/** How far short of the pin an ace lands, and how far off the direct line (radians). */
+const ACE_LAND_DISTANCE = [30, 55];
+const ACE_LINE_JITTER = 0.3;
+/**
+ * Per-shot ace chance. Aces can't repeat, so the long-run rate is p / (1 + p);
+ * 1/9 gives 10% overall.
+ */
+export const ACE_CHANCE = 1 / 9;
 
 const between = (rand: () => number, [min, max]: number[]) =>
   min + rand() * (max - min);
 
+/** Whether the next shot is an ace. Never two in a row. */
+export function nextShotIsAce(
+  previousWasAce: boolean,
+  rand: () => number = Math.random,
+): boolean {
+  return !previousWasAce && rand() < ACE_CHANCE;
+}
+
 export function randomShot(
   area: ShotArea,
+  { ace = false }: { ace?: boolean } = {},
   rand: () => number = Math.random,
 ): Shot {
   const { pin, size } = area;
@@ -35,9 +61,13 @@ export function randomShot(
     y: size * between(rand, START_Y_FRACTION),
   };
 
-  // Land somewhere on the green around the pin, never on it.
-  const angle = rand() * Math.PI * 2;
-  const radius = between(rand, LAND_RADIUS);
+  // Normal shots land anywhere on the green around the pin, never on it.
+  // Aces land a little short, roughly on the line back toward the golfer.
+  const angle = ace
+    ? Math.atan2(start.y - pin.y, (start.x - pin.x) / GREEN_ASPECT) +
+      (rand() - 0.5) * 2 * ACE_LINE_JITTER
+    : rand() * Math.PI * 2;
+  const radius = between(rand, ace ? ACE_LAND_DISTANCE : LAND_RADIUS);
   const land = {
     x: pin.x + Math.cos(angle) * radius * GREEN_ASPECT,
     y: pin.y + Math.sin(angle) * radius,
@@ -49,6 +79,8 @@ export function randomShot(
     y: Math.max(apex, -60),
   };
 
+  if (ace) return { start, control, land, rest: { ...pin }, ace };
+
   // Roll part of the way toward the pin, stopping short of the cup.
   const landDistance = Math.hypot(pin.x - land.x, pin.y - land.y);
   const maxRoll = Math.max(0, 1 - MIN_REST_DISTANCE / landDistance);
@@ -58,7 +90,7 @@ export function randomShot(
     y: land.y + (pin.y - land.y) * roll,
   };
 
-  return { start, control, land, rest };
+  return { start, control, land, rest, ace };
 }
 
 export const pointBetween = (a: Point, b: Point, t: number): Point => ({
