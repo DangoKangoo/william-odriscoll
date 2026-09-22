@@ -1,7 +1,7 @@
 // Regenerates every brand asset from the one logo definition in src/lib/logo.ts:
 //   public/favicon.svg        flag on the green tile
 //   public/favicon-32.png     PNG fallback for browsers without SVG favicons
-//   public/apple-touch-icon.png, icon-192.png, icon-512.png   home-screen icons
+//   public/apple-touch-icon.png, icon-192/512.png, icon-maskable-512.png   home-screen icons
 //   public/manifest.webmanifest
 //   public/og.png             1200x630 social share card
 //   brand/logo-mark-*.svg     flag mark, green and white
@@ -37,14 +37,22 @@ function tileSvg({ radius, inset }) {
 }
 
 const FAVICON = tileSvg({ radius: 8, inset: 4 });
-// Inset keeps the flag inside the maskable-icon safe zone (the central 80%).
-const APP_ICON = tileSvg({ radius: 0, inset: 7 });
+// Full-bleed tile for iOS and maskable icons, where the OS applies its own
+// shape. The inset keeps the flag inside the maskable safe zone (central 80%).
+const FULL_BLEED_TILE = tileSvg({ radius: 0, inset: 7 });
 
 // File names are relative to the manifest, so they work under any base path.
+// `purpose` set means the icon is listed in the manifest.
 const APP_ICONS = [
-  { file: "apple-touch-icon.png", size: 180 },
-  { file: "icon-192.png", size: 192 },
-  { file: "icon-512.png", size: 512 },
+  { file: "apple-touch-icon.png", size: 180, svg: FULL_BLEED_TILE },
+  { file: "icon-192.png", size: 192, svg: FAVICON, purpose: "any" },
+  { file: "icon-512.png", size: 512, svg: FAVICON, purpose: "any" },
+  {
+    file: "icon-maskable-512.png",
+    size: 512,
+    svg: FULL_BLEED_TILE,
+    purpose: "maskable",
+  },
 ];
 
 function manifest() {
@@ -56,13 +64,14 @@ function manifest() {
     scope: "./",
     display: "browser",
     background_color: BRAND_COLORS.background,
-    theme_color: BRAND_COLORS.green,
-    icons: APP_ICONS.filter(({ file }) => file.startsWith("icon-")).map(
-      ({ file, size }) => ({
+    // Matches the page's theme-color meta (Base.astro), the off-white header.
+    theme_color: BRAND_COLORS.background,
+    icons: APP_ICONS.filter(({ purpose }) => purpose).map(
+      ({ file, size, purpose }) => ({
         src: file,
         sizes: `${size}x${size}`,
         type: "image/png",
-        purpose: "any maskable",
+        purpose,
       }),
     ),
   };
@@ -154,8 +163,11 @@ async function main() {
       path.join(PUBLIC_DIR, "favicon-32.png"),
       { transparent: true },
     );
-    for (const { file, size } of APP_ICONS) {
-      await renderPng(browser, APP_ICON, size, path.join(PUBLIC_DIR, file));
+    for (const { file, size, svg } of APP_ICONS) {
+      // Rounded "any" icons need transparent corners; full-bleed ones are opaque anyway.
+      await renderPng(browser, svg, size, path.join(PUBLIC_DIR, file), {
+        transparent: true,
+      });
     }
 
     const card = await browser.newPage({
@@ -180,7 +192,7 @@ async function main() {
   }
 
   console.log(
-    "Wrote public/ (favicon.svg, favicon-32.png, 3 app icons, manifest, og.png) and brand/ (2 SVG, 4 PNG).",
+    "Wrote public/ (favicon.svg, favicon-32.png, 4 app icons, manifest, og.png) and brand/ (2 SVG, 4 PNG).",
   );
 }
 

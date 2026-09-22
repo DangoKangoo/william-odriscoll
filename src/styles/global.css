@@ -60,6 +60,14 @@ svg {
   background: var(--color-sand);
 }
 
+/* Visible viewport on mobile Safari, where 100vh includes the toolbar.
+   In @supports so the minifier keeps the 100vh fallback above. */
+@supports (min-height: 100dvh) {
+  body {
+    min-height: 100dvh;
+  }
+}
+
 /* Keeps the footer at the bottom on short pages (404, privacy). */
 .main {
   flex: 1;
