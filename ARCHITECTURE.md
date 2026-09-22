@@ -14,6 +14,7 @@ src/
   lib/
     logo.ts               The flag mark (path, stroke, brand colors)
     shots.ts              Random golf-shot geometry for the hero loop
+    structured-data.ts    JSON-LD business schema for the homepage (from config)
     sites.ts              Joins entries + screenshots + embed checks, sorted by order
     topo.ts               Seeded contour generator for the hero art
     url.ts                withBase() for base-path aware URLs
