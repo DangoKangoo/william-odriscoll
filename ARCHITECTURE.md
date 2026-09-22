@@ -14,14 +14,15 @@ src/
   lib/
     logo.ts               The flag mark (path, stroke, brand colors)
     shots.ts              Random golf-shot geometry for the hero loop
+    work-status.ts        "Currently building / in talks" line from the work counts
     structured-data.ts    JSON-LD business schema for the homepage (from config)
     sites.ts              Joins entries + screenshots + embed checks, sorted by order
     topo.ts               Seeded contour generator for the hero art
     url.ts                withBase() for base-path aware URLs
   components/
     layout/               Header, Footer
-    sections/             Hero, Work, Services, Contact (one per page section)
-    ui/                   Button, BrowserFrame, SiteCard
+    sections/             Hero, Work, Services, Statement, Contact (one per page section)
+    ui/                   Button, BrowserFrame, SiteCard, InProgressCard, NextCard
     art/                  TopoGreen, OutOfBounds, Logo, Icon, FairwayDivider (inline SVG)
   layouts/Base.astro      <head>, SEO and OG tags, fonts, reveal script
   pages/index.astro       Composes the sections
