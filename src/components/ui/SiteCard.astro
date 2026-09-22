@@ -15,7 +15,7 @@ const year = site.launched.slice(0, 4);
 ---
 
 <article class="card">
-  <BrowserFrame url={site.url}>
+  <BrowserFrame url={site.url} badge="Screenshot">
     <Image
       class="card__shot"
       src={site.screenshot}
@@ -37,9 +37,6 @@ const year = site.launched.slice(0, 4);
         ></iframe>
       </div>
     )}
-    <span class="card__badge" data-badge>
-      Screenshot
-    </span>
   </BrowserFrame>
 
   <div class="card__body">
@@ -147,20 +144,6 @@ const year = site.launched.slice(0, 4);
     transform: scale(var(--scale, 0.4));
     transform-origin: top left;
     pointer-events: none;
-  }
-
-  .card__badge {
-    position: absolute;
-    right: var(--space-3);
-    bottom: var(--space-3);
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-pill);
-    background: rgb(16 35 26 / 78%);
-    color: var(--color-on-accent);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    backdrop-filter: blur(6px);
   }
 
   .card__body {
