@@ -9,7 +9,11 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="container">
     <div class="footer__top">
-      <a class="footer__brand" href={withBase("/")}>
+      <a
+        class="footer__brand"
+        href={withBase("/")}
+        aria-label={`${site.name}, home`}
+      >
         <span class="footer__mark">
           <Logo />
         </span>
@@ -50,6 +54,7 @@ const year = new Date().getFullYear();
 
 <style>
   .footer {
+    --color-focus: var(--color-on-accent);
     background: var(--color-accent-deep);
     color: var(--color-on-accent-muted);
     font-size: var(--font-size-sm);
@@ -111,8 +116,9 @@ const year = new Date().getFullYear();
   .footer__social {
     display: inline-flex;
     justify-self: start;
-    padding: var(--space-2);
-    margin: calc(-1 * var(--space-2));
+    --tap-padding: calc((44px - 22px) / 2);
+    padding: var(--tap-padding);
+    margin: calc(-1 * var(--tap-padding));
   }
 
   .footer__social svg {
