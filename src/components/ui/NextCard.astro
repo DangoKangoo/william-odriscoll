@@ -3,18 +3,14 @@
 import { work } from "../../config/site";
 ---
 
-<a
-  class="next"
-  href={work.nextCard.cta.href}
-  aria-label={`${work.nextCard.cta.label}: ${work.nextCard.title}`}
->
+<a class="next" href={work.nextCard.cta.href}>
   <span class="next__plus" aria-hidden="true">
     <svg viewBox="0 0 24 24">
       <path d="M12 5v14M5 12h14"></path>
     </svg>
   </span>
-  <span class="next__title">{work.nextCard.title}</span>
-  <span class="next__body">{work.nextCard.body}</span>
+  <span class="next__title">{work.nextCard.title}</span>{" "}
+  <span class="next__body">{work.nextCard.body}</span>{" "}
   <span class="next__cta">
     {work.nextCard.cta.label}
     <svg viewBox="0 0 16 16" aria-hidden="true">

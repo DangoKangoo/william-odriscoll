@@ -21,8 +21,8 @@ const more = sites.filter((site) => !site.featured);
       <p class="eyebrow">Selected work</p>
       <h2 id="work-title">Sites built for the game.</h2>
       <p>
-        Real, live sites for golf businesses across Canada. Click any one to
-        visit it.
+        Real, live sites for golf businesses across Canada. Click any live site
+        to visit it.
       </p>
       {status.length > 0 && (
         <p class="work__status">
@@ -31,7 +31,12 @@ const more = sites.filter((site) => !site.featured);
             {status.map((part, i) => (
               <span class="work__status-part">
                 {part}
-                {i < status.length - 1 && " · "}
+                {i < status.length - 1 && (
+                  <>
+                    <span aria-hidden="true"> · </span>
+                    <span class="visually-hidden">, </span>
+                  </>
+                )}
               </span>
             ))}
           </span>

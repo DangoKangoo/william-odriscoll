@@ -1,7 +1,8 @@
 ---
 // Browser-window chrome around a site preview. The slot is the viewport.
 // Pass `url` for a real site (its host shows in the address bar), or
-// `address` for a label. `badge` is the corner tag (e.g. "Screenshot").
+// `address` for a label. `badge` is the corner tag (e.g. "Screenshot"). It's
+// hidden from screen readers: the image alt or card text already says it.
 interface Props {
   url?: string;
   address?: string;
@@ -27,7 +28,7 @@ const label = address ?? new URL(url!).host.replace(/^www\./, "");
   <div class="frame__viewport">
     <slot />
     {badge && (
-      <span class="frame__badge" data-badge>
+      <span class="frame__badge" data-badge aria-hidden="true">
         {badge}
       </span>
     )}
