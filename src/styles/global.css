@@ -13,6 +13,9 @@ html {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   background: var(--color-bg);
   color: var(--color-ink);
@@ -55,6 +58,19 @@ svg {
 
 ::selection {
   background: var(--color-sand);
+}
+
+/* Visible viewport on mobile Safari, where 100vh includes the toolbar.
+   In @supports so the minifier keeps the 100vh fallback above. */
+@supports (min-height: 100dvh) {
+  body {
+    min-height: 100dvh;
+  }
+}
+
+/* Keeps the footer at the bottom on short pages (404, privacy). */
+.main {
+  flex: 1;
 }
 
 .container {

@@ -1,5 +1,8 @@
 // Regenerates every brand asset from the one logo definition in src/lib/logo.ts:
 //   public/favicon.svg        flag on the green tile
+//   public/favicon-32.png     PNG fallback for browsers without SVG favicons
+//   public/apple-touch-icon.png, icon-192/512.png, icon-maskable-512.png   home-screen icons
+//   public/manifest.webmanifest
 //   public/og.png             1200x630 social share card
 //   brand/logo-mark-*.svg     flag mark, green and white
 //   brand/logo-mark-*-{512,1024}.png
@@ -26,8 +29,69 @@ function markSvg(color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${MARK_VIEWBOX}"><path d="${LOGO_PATH}" fill="none" stroke="${color}" stroke-width="${LOGO_STROKE_WIDTH}" stroke-linecap="round" stroke-linejoin="round"/></svg>\n`;
 }
 
-function faviconSvg() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="${BRAND_COLORS.green}"/><svg x="4" y="4" width="24" height="24" viewBox="${MARK_VIEWBOX}"><path d="${LOGO_PATH}" fill="none" stroke="${BRAND_COLORS.offWhite}" stroke-width="${LOGO_STROKE_WIDTH}" stroke-linecap="round" stroke-linejoin="round"/></svg></svg>\n`;
+// White flag on the green tile, on a 32-unit canvas. `radius` rounds the tile
+// (the favicon); home-screen icons are full-bleed because the OS rounds them.
+function tileSvg({ radius, inset }) {
+  const markSize = 32 - inset * 2;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="${radius}" fill="${BRAND_COLORS.green}"/><svg x="${inset}" y="${inset}" width="${markSize}" height="${markSize}" viewBox="${MARK_VIEWBOX}"><path d="${LOGO_PATH}" fill="none" stroke="${BRAND_COLORS.offWhite}" stroke-width="${LOGO_STROKE_WIDTH}" stroke-linecap="round" stroke-linejoin="round"/></svg></svg>\n`;
+}
+
+const FAVICON = tileSvg({ radius: 8, inset: 4 });
+// Full-bleed tile for iOS and maskable icons, where the OS applies its own
+// shape. The inset keeps the flag inside the maskable safe zone (central 80%).
+const FULL_BLEED_TILE = tileSvg({ radius: 0, inset: 7 });
+
+// File names are relative to the manifest, so they work under any base path.
+// `purpose` set means the icon is listed in the manifest.
+const APP_ICONS = [
+  { file: "apple-touch-icon.png", size: 180, svg: FULL_BLEED_TILE },
+  { file: "icon-192.png", size: 192, svg: FAVICON, purpose: "any" },
+  { file: "icon-512.png", size: 512, svg: FAVICON, purpose: "any" },
+  {
+    file: "icon-maskable-512.png",
+    size: 512,
+    svg: FULL_BLEED_TILE,
+    purpose: "maskable",
+  },
+];
+
+function manifest() {
+  return {
+    name: site.name,
+    short_name: "W. O'Driscoll",
+    description: site.description,
+    start_url: "./",
+    scope: "./",
+    display: "browser",
+    background_color: BRAND_COLORS.background,
+    // Matches the page's theme-color meta (Base.astro), the off-white header.
+    theme_color: BRAND_COLORS.background,
+    icons: APP_ICONS.filter(({ purpose }) => purpose).map(
+      ({ file, size, purpose }) => ({
+        src: file,
+        sizes: `${size}x${size}`,
+        type: "image/png",
+        purpose,
+      }),
+    ),
+  };
+}
+
+async function renderPng(
+  browser,
+  svg,
+  size,
+  file,
+  { transparent = false } = {},
+) {
+  const page = await browser.newPage({
+    viewport: { width: size, height: size },
+  });
+  await page.setContent(
+    `<body style="margin:0;background:transparent">${svg.replace("<svg ", `<svg width="${size}" height="${size}" style="display:block" `)}</body>`,
+  );
+  await page.screenshot({ path: file, omitBackground: transparent });
+  await page.close();
 }
 
 function shareCardHtml() {
@@ -64,7 +128,11 @@ function shareCardHtml() {
 
 async function main() {
   await mkdir(BRAND_DIR, { recursive: true });
-  await writeFile(path.join(PUBLIC_DIR, "favicon.svg"), faviconSvg());
+  await writeFile(path.join(PUBLIC_DIR, "favicon.svg"), FAVICON);
+  await writeFile(
+    path.join(PUBLIC_DIR, "manifest.webmanifest"),
+    JSON.stringify(manifest(), null, 2) + "\n",
+  );
 
   const variants = { green: BRAND_COLORS.green, white: BRAND_COLORS.white };
   for (const [name, color] of Object.entries(variants)) {
@@ -78,18 +146,28 @@ async function main() {
   try {
     for (const [name, color] of Object.entries(variants)) {
       for (const size of PNG_SIZES) {
-        const page = await browser.newPage({
-          viewport: { width: size, height: size },
-        });
-        await page.setContent(
-          `<body style="margin:0;background:transparent">${markSvg(color).replace("<svg ", `<svg width="${size}" height="${size}" `)}</body>`,
+        await renderPng(
+          browser,
+          markSvg(color),
+          size,
+          path.join(BRAND_DIR, `logo-mark-${name}-${size}.png`),
+          { transparent: true },
         );
-        await page.screenshot({
-          path: path.join(BRAND_DIR, `logo-mark-${name}-${size}.png`),
-          omitBackground: true,
-        });
-        await page.close();
       }
+    }
+
+    await renderPng(
+      browser,
+      FAVICON,
+      32,
+      path.join(PUBLIC_DIR, "favicon-32.png"),
+      { transparent: true },
+    );
+    for (const { file, size, svg } of APP_ICONS) {
+      // Rounded "any" icons need transparent corners; full-bleed ones are opaque anyway.
+      await renderPng(browser, svg, size, path.join(PUBLIC_DIR, file), {
+        transparent: true,
+      });
     }
 
     const card = await browser.newPage({
@@ -114,7 +192,7 @@ async function main() {
   }
 
   console.log(
-    "Wrote public/favicon.svg, public/og.png and brand/ (2 SVG, 4 PNG).",
+    "Wrote public/ (favicon.svg, favicon-32.png, 4 app icons, manifest, og.png) and brand/ (2 SVG, 4 PNG).",
   );
 }
 
