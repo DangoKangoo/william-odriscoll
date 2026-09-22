@@ -137,17 +137,17 @@ const confettiColors = ["green", "sand", "flag", "white"];
     ["fade", 500],
     ["gap", 400],
   ] as const;
+  const CELEBRATE_MS = 1300;
   const ACE_PHASES = [
     ["flight", 1600],
     ["roll", 900],
     ["drop", 250],
-    ["celebrate", 1300],
+    ["celebrate", CELEBRATE_MS],
     ["fade", 500],
     ["gap", 400],
   ] as const;
   type Phases = typeof NORMAL_PHASES | typeof ACE_PHASES;
   type Phase = Phases[number][0];
-  const CELEBRATE_MS = 1300;
 
   const RIPPLE_MAX_RX = 64;
   const RIPPLE_ASPECT = 4 / 9; // Matches the cup ellipse (rx 9, ry 4).
