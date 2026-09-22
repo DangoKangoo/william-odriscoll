@@ -1,0 +1,96 @@
+---
+// Plain-language privacy note. Update LAST_UPDATED whenever the text changes.
+import Base from "../layouts/Base.astro";
+import { site } from "../config/site";
+
+const LAST_UPDATED = "2026-09-22";
+const GITHUB_PRIVACY_URL =
+  "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement";
+const updated = new Date(`${LAST_UPDATED}T12:00:00Z`).toLocaleDateString(
+  "en-CA",
+  { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" },
+);
+---
+
+<Base
+  title={`Privacy | ${site.name}`}
+  description={`How ${site.name}'s website handles your information: no cookies, no tracking, and emails used only to reply.`}
+>
+  <article class="section">
+    <div class="container privacy">
+      <p class="eyebrow">Privacy</p>
+      <h1>Privacy note</h1>
+      <p class="privacy__updated">
+        Last updated <time datetime={LAST_UPDATED}>{updated}</time>
+      </p>
+
+      <h2>The short version</h2>
+      <p>
+        This site doesn't use cookies, analytics or tracking of any kind, and it
+        has no forms. The only information I receive is what you choose to send
+        me by email.
+      </p>
+
+      <h2>Emails you send me</h2>
+      <p>
+        If you email me at <a href={`mailto:${site.email}`}>{site.email}</a>, I
+        use your name, email address and message only to reply and to work on
+        your project. I never sell or share them. If you'd like me to delete
+        your emails, ask and I will.
+      </p>
+
+      <h2>Hosting</h2>
+      <p>
+        This site is hosted on GitHub Pages. Like most web hosts, GitHub may
+        record technical information such as your IP address when you visit, to
+        keep the service secure. GitHub's{" "}
+        <a href={GITHUB_PRIVACY_URL} target="_blank" rel="noopener">
+          General Privacy Statement
+        </a>{" "}
+        explains how it handles that information.
+      </p>
+
+      <h2>Links to other sites</h2>
+      <p>
+        The work section links to sites I've built for clients, and the footer
+        links to LinkedIn. Those sites have their own privacy policies.
+      </p>
+
+      <h2>Questions</h2>
+      <p>
+        Email <a href={`mailto:${site.email}`}>{site.email}</a> and I'll get
+        back to you.
+      </p>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .privacy {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 44rem;
+  }
+
+  h1 {
+    font-size: var(--font-size-xl);
+  }
+
+  h2 {
+    margin-top: var(--space-5);
+    font-size: var(--font-size-lg);
+  }
+
+  p {
+    color: var(--color-muted);
+  }
+
+  .privacy__updated {
+    font-size: var(--font-size-sm);
+  }
+
+  a {
+    color: var(--color-accent);
+    text-underline-offset: 3px;
+  }
+</style>
