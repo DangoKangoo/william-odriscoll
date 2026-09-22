@@ -1,0 +1,85 @@
+---
+import TopoGreen from "../art/TopoGreen.astro";
+import Button from "../ui/Button.astro";
+import { hero } from "../../config/site";
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow">{hero.eyebrow}</p>
+      <h1 id="hero-title">{hero.title}</h1>
+      <p class="hero__lead">{hero.lead}</p>
+      <div class="hero__actions">
+        <Button href={hero.primaryCta.href}>{hero.primaryCta.label}</Button>
+        <Button href={hero.secondaryCta.href} variant="secondary">
+          {hero.secondaryCta.label}
+        </Button>
+      </div>
+    </div>
+    <div class="hero__art">
+      <TopoGreen />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    overflow: hidden;
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .hero__inner {
+    display: grid;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .hero__copy {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 42rem;
+  }
+
+  h1 {
+    font-size: var(--font-size-hero);
+    font-weight: 800;
+    line-height: var(--line-tight);
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  .hero__lead {
+    max-width: 34rem;
+    color: var(--color-muted);
+    font-size: var(--font-size-lg);
+    line-height: 1.55;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .hero__art {
+    width: min(100%, 34rem);
+    justify-self: center;
+  }
+
+  @media (min-width: 60rem) {
+    .hero {
+      padding-block: var(--space-9) var(--space-8);
+    }
+
+    .hero__inner {
+      grid-template-columns: 1.3fr 1fr;
+    }
+
+    .hero__art {
+      width: 118%;
+      margin-right: -12%;
+    }
+  }
+</style>

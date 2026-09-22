@@ -1,0 +1,79 @@
+---
+import Button from "../ui/Button.astro";
+import { contact, site } from "../../config/site";
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <div class="container contact__inner" data-reveal>
+    <p class="eyebrow">Contact</p>
+    <h2 id="contact-title">{contact.title}</h2>
+    <p class="contact__body">{contact.body}</p>
+    <Button href={`mailto:${site.email}`} variant="light">
+      Email me
+    </Button>
+    <a class="contact__email" href={`mailto:${site.email}`}>
+      {site.email}
+    </a>
+  </div>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-accent-strong);
+    color: var(--color-on-accent);
+    text-align: center;
+  }
+
+  /* Faint golf-ball dimple texture: two offset grids of shaded dots. */
+  .contact::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+          circle at 40% 35%,
+          rgb(255 255 255 / 9%) 0 3px,
+          rgb(0 0 0 / 12%) 5px,
+          transparent 6px
+        )
+        0 0 / 22px 22px,
+      radial-gradient(
+          circle at 40% 35%,
+          rgb(255 255 255 / 9%) 0 3px,
+          rgb(0 0 0 / 12%) 5px,
+          transparent 6px
+        )
+        11px 11px / 22px 22px;
+    mask-image: radial-gradient(ellipse at center, #000 10%, transparent 75%);
+    pointer-events: none;
+  }
+
+  .contact__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-5);
+    max-width: 42rem;
+  }
+
+  .eyebrow {
+    color: var(--color-on-accent-muted);
+  }
+
+  h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .contact__body {
+    color: var(--color-on-accent-muted);
+    font-size: var(--font-size-lg);
+  }
+
+  .contact__email {
+    color: var(--color-on-accent);
+    font-size: var(--font-size-sm);
+    text-underline-offset: 4px;
+  }
+</style>

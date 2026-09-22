@@ -1,0 +1,101 @@
+---
+// Featured sites get a full preview card. Everything else is listed below as
+// compact links, so the grid stays tidy as the catalog grows.
+import SiteCard from "../ui/SiteCard.astro";
+import { getSites } from "../../lib/sites";
+
+const sites = await getSites();
+const featured = sites.filter((site) => site.featured);
+const more = sites.filter((site) => !site.featured);
+---
+
+<section id="work" class="section work" aria-labelledby="work-title">
+  <div class="container">
+    <header class="section-head" data-reveal>
+      <p class="eyebrow">Selected work</p>
+      <h2 id="work-title">Sites built for the game.</h2>
+      <p>
+        Real, live sites for golf businesses across Canada. Click any one to
+        visit it.
+      </p>
+    </header>
+
+    <ul class="work__grid">
+      {featured.map((site, index) => (
+        <li data-reveal style={`--reveal-index: ${index}`}>
+          <SiteCard site={site} index={index} />
+        </li>
+      ))}
+    </ul>
+
+    {more.length > 0 && (
+      <div class="work__more" data-reveal>
+        <h3>More work</h3>
+        <ul>
+          {more.map((site) => (
+            <li>
+              <a href={site.url} target="_blank" rel="noopener">
+                {site.name}
+              </a>
+              <span>{site.location}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .work {
+    padding-top: var(--space-7);
+    background: var(--color-surface);
+  }
+
+  .work__grid {
+    display: grid;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .work__grid > li {
+    display: grid;
+  }
+
+  @media (min-width: 60rem) {
+    .work__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .work__more {
+    margin-top: var(--space-7);
+  }
+
+  .work__more h3 {
+    margin-bottom: var(--space-4);
+    font-size: var(--font-size-md);
+  }
+
+  .work__more ul {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .work__more li {
+    display: flex;
+    justify-content: space-between;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .work__more span {
+    color: var(--color-muted);
+    font-size: var(--font-size-sm);
+  }
+</style>

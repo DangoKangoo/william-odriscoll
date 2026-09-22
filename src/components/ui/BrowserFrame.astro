@@ -1,0 +1,68 @@
+---
+// Browser-window chrome around a site preview. The slot is the viewport.
+interface Props {
+  url: string;
+}
+
+const { host } = new URL(Astro.props.url);
+---
+
+<div class="frame">
+  <div class="frame__bar" aria-hidden="true">
+    <span class="frame__dots">
+      <i></i>
+      <i></i>
+      <i></i>
+    </span>
+    <span class="frame__address">{host.replace(/^www\./, "")}</span>
+  </div>
+  <div class="frame__viewport">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .frame {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .frame__bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--color-line);
+    background: #fbfbf8;
+  }
+
+  .frame__dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .frame__dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-line);
+  }
+
+  .frame__address {
+    padding: 0.15rem 0.9rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg);
+    color: var(--color-muted);
+    font-size: 0.75rem;
+  }
+
+  .frame__viewport {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-bg);
+  }
+</style>

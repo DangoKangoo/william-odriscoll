@@ -1,0 +1,89 @@
+---
+import { site } from "../../config/site";
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a class="brand" href="#top" aria-label={`${site.name}, back to top`}>
+      <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 21V3.5l11 3.75L7 11"></path>
+      </svg>
+      {site.name}
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        {site.nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid rgb(227 226 218 / 70%);
+    background: rgb(247 246 241 / 82%);
+    backdrop-filter: saturate(1.4) blur(12px);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 4rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .brand__mark {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  ul {
+    display: flex;
+    gap: clamp(var(--space-3), 3vw, var(--space-6));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--color-muted);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--duration-fast) ease;
+  }
+
+  nav a:hover {
+    color: var(--color-ink);
+  }
+
+  @media (max-width: 26rem) {
+    nav li:not(:last-child) {
+      display: none;
+    }
+  }
+</style>

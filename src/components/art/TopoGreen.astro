@@ -1,0 +1,161 @@
+---
+// Hero illustration: contour map of a green, a flag, and a ball flight that
+// draws itself once on load.
+import { contourPaths } from "../../lib/topo";
+
+const green = { x: 372, y: 250 };
+const contours = contourPaths({
+  cx: green.x,
+  cy: green.y,
+  rings: 14,
+  spacing: 26,
+  seed: 18,
+});
+const flight = `M 40 560 Q 150 20 ${green.x - 22} ${green.y + 8}`;
+---
+
+<svg
+  class="topo"
+  viewBox="0 0 600 600"
+  role="img"
+  aria-label="Contour map of a golf green with a flag and a ball flight landing near the pin"
+>
+  <defs>
+    <radialGradient id="topo-green" cx="50%" cy="50%" r="50%">
+      <stop
+        offset="0%"
+        stop-color="var(--color-accent)"
+        stop-opacity="0.22"
+      ></stop>
+      <stop
+        offset="100%"
+        stop-color="var(--color-accent)"
+        stop-opacity="0"
+      ></stop>
+    </radialGradient>
+    <mask id="topo-flight-mask">
+      <path class="topo__flight-draw" d={flight} pathLength="1"></path>
+    </mask>
+  </defs>
+
+  <ellipse
+    cx={green.x}
+    cy={green.y}
+    rx="150"
+    ry="120"
+    fill="url(#topo-green)"
+  ></ellipse>
+
+  <g class="topo__lines">
+    {contours.map((d, i) => (
+      <path
+        d={d}
+        class:list={["topo__line", { "topo__line--major": i % 4 === 1 }]}
+      />
+    ))}
+  </g>
+
+  <path class="topo__flight" d={flight} mask="url(#topo-flight-mask)"></path>
+
+  <g class="topo__pin" transform={`translate(${green.x} ${green.y})`}>
+    <ellipse class="topo__cup" rx="9" ry="4"></ellipse>
+    <line class="topo__pole" x1="0" y1="0" x2="0" y2="-92"></line>
+    <path class="topo__flag" d="M0 -92 L44 -79 L0 -66 Z"></path>
+  </g>
+
+  <g class="topo__ball" transform={`translate(${green.x - 22} ${green.y + 8})`}>
+    <ellipse class="topo__ball-shadow" cx="2" cy="6" rx="8" ry="2.5"></ellipse>
+    <circle r="7"></circle>
+  </g>
+</svg>
+
+<style>
+  .topo {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .topo__line {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-opacity: 0.22;
+    stroke-width: 1;
+  }
+
+  .topo__line--major {
+    stroke-opacity: 0.4;
+    stroke-width: 1.4;
+  }
+
+  .topo__flight {
+    fill: none;
+    stroke: var(--color-accent-strong);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 2 9;
+  }
+
+  .topo__flight-draw {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 8;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: topo-draw var(--duration-slow) var(--ease-out) 300ms forwards;
+  }
+
+  .topo__cup {
+    fill: var(--color-accent-deep);
+  }
+
+  .topo__pole {
+    stroke: var(--color-ink);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .topo__flag {
+    fill: #c8412f;
+  }
+
+  .topo__ball circle {
+    fill: #fff;
+    stroke: var(--color-ink);
+    stroke-width: 1.5;
+  }
+
+  .topo__ball-shadow {
+    fill: var(--color-ink);
+    opacity: 0.18;
+  }
+
+  .topo__ball {
+    opacity: 0;
+    animation: topo-land 400ms var(--ease-out) 1750ms forwards;
+  }
+
+  @keyframes topo-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes topo-land {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .topo__flight-draw {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+
+    .topo__ball {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>

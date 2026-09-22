@@ -1,0 +1,79 @@
+---
+import Icon from "../art/Icon.astro";
+import { services } from "../../config/site";
+---
+
+<section id="services" class="section" aria-labelledby="services-title">
+  <div class="container">
+    <header class="section-head" data-reveal>
+      <p class="eyebrow">Services</p>
+      <h2 id="services-title">
+        Everything your site needs, from tee to green.
+      </h2>
+    </header>
+
+    <ul class="services">
+      {services.map((service, index) => (
+        <li class="service" data-reveal style={`--reveal-index: ${index}`}>
+          <span class="service__icon">
+            <Icon name={service.icon} />
+          </span>
+          <h3>{service.title}</h3>
+          <p>{service.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .services {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .services {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .service {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    padding: var(--space-6) var(--space-5);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .service__icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: var(--space-2);
+    border-radius: var(--radius-md);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  p {
+    color: var(--color-muted);
+    font-size: var(--font-size-sm);
+  }
+</style>
