@@ -43,14 +43,14 @@ function shareCardHtml() {
   return `<!doctype html><html><head>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Manrope:wght@800&display=block" rel="stylesheet">
 <style>
-  body { margin: 0; width: 1200px; height: 630px; background: #f7f6f1; font-family: Inter, sans-serif; color: #10231a; overflow: hidden; position: relative; }
+  body { margin: 0; width: 1200px; height: 630px; background: ${BRAND_COLORS.background}; font-family: Inter, sans-serif; color: ${BRAND_COLORS.ink}; overflow: hidden; position: relative; }
   .contours { position: absolute; inset: 0; }
   .contours path { fill: none; stroke: ${BRAND_COLORS.green}; stroke-opacity: .2; stroke-width: 1.5; }
   .content { position: absolute; left: 96px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
   .lockup { display: flex; align-items: center; gap: 28px; }
   .lockup svg { width: 120px; height: 120px; }
   h1 { margin: 0; font: 800 76px/1 Manrope, sans-serif; letter-spacing: -0.035em; }
-  p { margin: 0; font-size: 34px; color: #52625a; }
+  p { margin: 0; font-size: 34px; color: ${BRAND_COLORS.muted}; }
   .loc { font-size: 22px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: ${BRAND_COLORS.green}; }
 </style></head><body>
 <svg class="contours" viewBox="0 0 1200 630">${contours}</svg>

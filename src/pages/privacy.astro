@@ -2,10 +2,18 @@
 // Plain-language privacy note. Update LAST_UPDATED whenever the text changes.
 import Base from "../layouts/Base.astro";
 import { site } from "../config/site";
+import { getSites } from "../lib/sites";
 
 const LAST_UPDATED = "2026-09-22";
 const GITHUB_PRIVACY_URL =
   "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement";
+// Live iframe previews load the client's own site (and whatever it sets), so the
+// note must say so whenever any site is embeddable. See src/data/embeds.json.
+const livePreviews = (await getSites()).filter((s) => s.embed.embeddable);
+const livePreviewNames = new Intl.ListFormat("en-CA").format(
+  livePreviews.map((s) => s.name),
+);
+
 const updated = new Date(`${LAST_UPDATED}T12:00:00Z`).toLocaleDateString(
   "en-CA",
   { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" },
@@ -26,10 +34,17 @@ const updated = new Date(`${LAST_UPDATED}T12:00:00Z`).toLocaleDateString(
 
       <h2>The short version</h2>
       <p>
-        This site doesn't use cookies, analytics or tracking of any kind, and it
-        has no forms. The only information I receive is what you choose to send
-        me by email.
+        This site doesn't set cookies or use analytics or tracking of any kind,
+        and it has no forms. The only information I receive is what you choose
+        to send me by email.
       </p>
+      {livePreviews.length > 0 && (
+        <p>
+          The work section shows live previews of {livePreviewNames}. Those
+          previews load the client's own website, which may set its own cookies
+          under its own privacy policy.
+        </p>
+      )}
 
       <h2>Emails you send me</h2>
       <p>
