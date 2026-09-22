@@ -66,7 +66,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 ## 2026-09-22: Search setup
 
 - The "How it works" section is dropped. William decided it wasn't needed.
-- The homepage carries JSON-LD `ProfessionalService` structured data: based in St. John's, NL and serving Canada, with email, logo and share image, and founder William O'Driscoll (Software Engineer) with LinkedIn as `sameAs`.
+- The homepage carries JSON-LD ~~`ProfessionalService`~~ `LocalBusiness` structured data (schema.org deprecates the generic `ProfessionalService`): based in St. John's, NL and serving Canada, with email, logo and share image, and founder William O'Driscoll (Software Engineer) with LinkedIn as `sameAs`.
 - Homepage title: "Golf Website Design, St. John's NL | William O'Driscoll".
   **Why:** people search for the service, not the name.
 - Search Console verification goes through the HTML tag method. The code lives in `site.googleSiteVerification`, and no tag renders while it's empty.

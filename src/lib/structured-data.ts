@@ -5,7 +5,8 @@ import { site } from "../config/site";
 type JsonLd = Record<string, unknown>;
 
 /**
- * Builds the ProfessionalService schema. Throws on missing required values,
+ * Builds the LocalBusiness schema (the generic ProfessionalService type is
+ * deprecated on schema.org). Throws on missing required values,
  * so a bad config fails the build instead of shipping broken markup.
  */
 export function businessSchema(
@@ -30,7 +31,7 @@ export function businessSchema(
 
   return {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": "LocalBusiness",
     "@id": `${siteUrl.href}#business`,
     name: site.name,
     description: site.description,

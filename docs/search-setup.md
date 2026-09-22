@@ -47,18 +47,20 @@ It usually takes a few days to a few weeks before the site shows up in results. 
 ### 5. Check the structured data
 
 1. Open https://search.google.com/test/rich-results and test the site URL.
-2. It should detect **Local businesses**. A warning about a missing street address is expected: you're a service-area business, so the address is deliberately city-only.
+2. It should detect **Local businesses** with no errors. Expect several non-critical warnings (missing street address, postal code, telephone, price range). That's expected: you're a service-area business, so the address is deliberately city-only, and none of those fields are required.
 3. For a strict schema check, use https://validator.schema.org with the same URL. It should show no errors.
 
 ## Part 2: Google Business Profile
 
 This is the listing that shows on Google Maps and in the local panel for searches like "golf website design St. John's". For local services it often matters more than the website itself.
 
+**Check eligibility first.** Google only allows businesses that meet customers in person. Online-only businesses aren't eligible and get suspended. You qualify as long as you meet clients face to face (at their course, club or shop). List only areas you actually travel to, and keep them within about 2 hours' drive of St. John's. Clients elsewhere in Canada are still welcome through the website; they just don't belong in the profile's service areas.
+
 1. Go to https://business.google.com and click **Manage now**.
 2. **Business name:** `William O'Driscoll`. Use your real business name only; Google suspends listings that stuff keywords into the name.
 3. **Category:** `Website designer`.
-4. **Do you want to add a location customers can visit?** Choose **No**, since clients don't visit you at an office. That makes you a service-area business, and Google keeps your address hidden.
-5. **Service areas:** start with `St. John's`, `Newfoundland and Labrador`, then add others as you take clients there. Google allows up to 20.
+4. **Do you want to add a location customers can visit?** Choose **No**, since clients don't visit you at an office. That makes you a service-area business. Google still asks for your address to verify you, but it keeps it hidden from the public.
+5. **Service areas:** `St. John's` plus nearby places you'd drive to, such as `Mount Pearl`, `Paradise` or `Conception Bay South`, all within about 2 hours. Don't add the whole province or distant cities. Google allows up to 20.
 6. **Contact:** your email, and a phone number if you're comfortable listing one. **Website:** the site URL above.
 7. **Verify:** Google will ask for a video, phone or email verification. Follow its prompts.
 8. After verification, fill in:
