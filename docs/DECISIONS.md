@@ -1,0 +1,28 @@
+# Decisions
+
+Confirmed through the `align` skill. Superseded decisions are struck through, never deleted.
+
+## 2026-09-22: Initial build
+
+- Fresh start. Nothing carries over from any earlier version of this site.
+- Purpose: a golf web studio sales page. William is introduced as a St. John's software engineer; the client sites do the selling.
+- Stack: Astro, fully static.
+- Hosting: GitHub Pages, deployed by GitHub Actions on every merge to `main`.
+- Repo: public `DangoKangoo/william-odriscoll`, served at `dangokangoo.github.io/william-odriscoll`. Custom domain later.
+- One page, four sections: Hero, Work, Services, Contact.
+- Visual direction: light, off-white background, deep golf-green accent, Manrope (display) + Inter (body).
+- Hero art: generated topographic contour map of a green, with a flag and a ball flight that draws itself once.
+- Motion: subtle. Scroll fade-ups, card hover lift, one-time ball-flight draw. Everything is off under `prefers-reduced-motion`.
+- Extras: service icons, dimple texture on Contact, one fairway divider under the hero.
+  **Why:** the stats strip was skipped until there are enough sites (5+) for the numbers to impress.
+- Showcase: a live iframe in a browser frame when the site allows framing from this origin, otherwise a screenshot. A badge always says which is showing.
+  **Why:** cross-origin iframes cannot reliably report a CSP block, so `npm run shots` checks the headers ahead of time and saves the result to `src/data/embeds.json`.
+- Screenshots: `npm run shots` (Playwright), committed to `src/assets/shots/`. The build fails if a site is missing one.
+- Site entry fields: name, url, description, location, tags, launched (YYYY-MM), featured, order.
+- `featured: true` gets a full preview card; `featured: false` is listed under "More work" as a compact link.
+- Contact: visible email `willod17@outlook.com` plus a mailto button. No form.
+- Analytics: none.
+- CI on every PR: Prettier, `astro check`, build, lychee link check, Lighthouse (performance and accessibility at least 0.9).
+- Branches: feature branches with PRs into a protected `main` that requires CI to pass.
+- Copy is drafted by Claude and reviewed by William before it ships.
+- Out of scope: analytics, contact form, custom domain, case studies, personal bio or CV.
