@@ -52,7 +52,7 @@ A card shows a live iframe only when the client site allows framing from this si
 - CI on every PR: Prettier, `astro check`, build, link check (lychee), Lighthouse (performance and accessibility at least 0.9).
 - A merge to `main` runs CI again, then deploys to GitHub Pages.
 
-More: [ARCHITECTURE.md](ARCHITECTURE.md), [docs/DECISIONS.md](docs/DECISIONS.md). New work is scoped with the `align` skill and shipped with the `ship` skill (PR, review, merge), both in `.claude/skills/`.
+More: [ARCHITECTURE.md](ARCHITECTURE.md), [docs/DECISIONS.md](docs/DECISIONS.md), [docs/search-setup.md](docs/search-setup.md) (Search Console and Google Business Profile). New work is scoped with the `align` skill and shipped with the `ship` skill (PR, review, merge), both in `.claude/skills/`.
 
 ## Brand
 
