@@ -39,13 +39,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Mirror the Pages layout so base-path links (/william-odriscoll/...) resolve.
       - uses: actions/download-artifact@v4
         with:
           name: dist
-          path: dist
+          path: site/william-odriscoll
       - uses: lycheeverse/lychee-action@v2
         with:
-          args: --config lychee.toml "dist/**/*.html"
+          args: >-
+            --config lychee.toml
+            --root-dir ${{ github.workspace }}/site
+            "site/**/*.html"
           fail: true
 
   lighthouse:

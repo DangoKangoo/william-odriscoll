@@ -1,6 +1,5 @@
-# Checks every external link in the built site (client sites, fonts).
-# Internal links use the Pages base path, which only exists once deployed.
-scheme = ["https", "http"]
+# Checks every link in the built site: internal assets (file) and external sites.
+scheme = ["https", "http", "file"]
 exclude = [
   # This site's own URLs (canonical, og:image) do not exist until the first deploy.
   '^https?://dangokangoo\.github\.io',
