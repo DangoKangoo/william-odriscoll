@@ -1,20 +1,22 @@
 ---
+import Logo from "../art/Logo.astro";
 import { site } from "../../config/site";
+import { withBase } from "../../lib/url";
 ---
 
 <header class="header">
   <div class="container header__inner">
-    <a class="brand" href="#top" aria-label={`${site.name}, back to top`}>
-      <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7 21V3.5l11 3.75L7 11"></path>
-      </svg>
+    <a class="brand" href={withBase("/")} aria-label={`${site.name}, home`}>
+      <span class="brand__mark">
+        <Logo />
+      </span>
       {site.name}
     </a>
     <nav aria-label="Main">
       <ul>
         {site.nav.map((item) => (
           <li>
-            <a href={item.href}>{item.label}</a>
+            <a href={withBase(item.href)}>{item.label}</a>
           </li>
         ))}
       </ul>
@@ -52,13 +54,8 @@ import { site } from "../../config/site";
   }
 
   .brand__mark {
-    width: 20px;
-    height: 20px;
-    fill: none;
-    stroke: var(--color-accent);
-    stroke-width: 2.25;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    display: inline-flex;
+    color: var(--color-accent);
   }
 
   ul {

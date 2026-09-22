@@ -1,15 +1,54 @@
 ---
+import Logo from "../art/Logo.astro";
 import { site } from "../../config/site";
+import { withBase } from "../../lib/url";
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="container footer__inner">
-    <p>
-      © {year} {site.name}
-    </p>
-    <p>{site.location}</p>
+  <div class="container">
+    <div class="footer__top">
+      <a class="footer__brand" href={withBase("/")}>
+        <span class="footer__mark">
+          <Logo size={28} />
+        </span>
+        <span>
+          <strong>{site.name}</strong>{" "}
+          <span class="footer__tagline">{site.role}</span>
+        </span>
+      </a>
+
+      <nav aria-label="Footer">
+        <ul class="footer__nav">
+          {site.footerNav.map((item) => (
+            <li>
+              <a href={withBase(item.href)}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <a
+        class="footer__social"
+        href={site.linkedin}
+        target="_blank"
+        rel="noopener"
+        aria-label="LinkedIn (opens in a new tab)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4v11H3v-11Zm6.5 0h3.83v1.5h.05c.53-1 1.84-1.8 3.62-1.8 3.87 0 4.5 2.4 4.5 5.53v5.77h-4v-5.1c0-1.22-.02-2.8-1.7-2.8-1.72 0-1.98 1.34-1.98 2.72v5.18h-4v-11Z"></path>
+        </svg>
+        LinkedIn
+      </a>
+    </div>
+
+    <div class="footer__bottom">
+      <p>
+        © {year} {site.name}
+      </p>
+      <p>{site.location}</p>
+    </div>
   </div>
 </footer>
 
@@ -17,14 +56,84 @@ const year = new Date().getFullYear();
   .footer {
     background: var(--color-accent-deep);
     color: var(--color-on-accent-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .footer a {
+    color: var(--color-on-accent-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .footer a:hover {
+    color: var(--color-on-accent);
+  }
+
+  .footer__top {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-7) var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__top {
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: var(--space-7);
+    }
+  }
+
+  .footer__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .footer__brand strong {
+    display: block;
+    color: var(--color-on-accent);
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: var(--font-size-md);
+    letter-spacing: -0.02em;
+  }
+
+  .footer__tagline {
     font-size: var(--font-size-xs);
   }
 
-  .footer__inner {
+  .footer__mark {
+    display: inline-flex;
+    color: var(--color-on-accent);
+  }
+
+  .footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer__social {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .footer__social svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .footer__bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: var(--space-2);
-    padding-block: var(--space-5);
+    padding-block: var(--space-4) var(--space-5);
+    border-top: 1px solid rgb(244 247 242 / 12%);
+    font-size: var(--font-size-xs);
   }
 </style>

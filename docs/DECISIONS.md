@@ -36,3 +36,16 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - The loop pauses when the hero is off screen or the tab is hidden.
   **Why:** it saves battery and CPU for an effect nobody is looking at.
 - Reduced motion or no JavaScript: one still, finished shot.
+
+## 2026-09-22: Logo, footer and privacy
+
+- The flag mark next to the name is the logo. One `Logo` component; the mark's geometry lives in `src/lib/logo.ts`.
+- The favicon is the exact same mark on the green rounded tile.
+- `npm run brand` regenerates the favicon, the share image and the `brand/` files from that one source, so they can't drift apart.
+- Brand files in `brand/` (repo only, not published): mark only, green and white, SVG + PNG at 512 and 1024px.
+- Share image: a branded 1200x630 card (contours, flag, name, tagline, location) replaces the hero screenshot.
+- Footer: logo, name and tagline; nav (Work, Services, Contact, Privacy); LinkedIn; then the © line and location.
+- LinkedIn (`linkedin.com/in/will-odriscoll`) is the only personal link on the site. No GitHub.
+- `/privacy`: a short plain-language note. No cookies, no tracking, emails used only to reply, never sold or shared, deleted on request, hosted on GitHub Pages.
+- The visible email under "Email me" stays.
+  **Why:** mailto doesn't work for webmail users who have no mail app set up.

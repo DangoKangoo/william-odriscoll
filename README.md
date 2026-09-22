@@ -20,6 +20,7 @@ npm run dev                        # http://localhost:4321/william-odriscoll/
 | `npm run format`     | Prettier, write                                         |
 | `npm run shots`      | Screenshot + framing check for every site (or one slug) |
 | `npm run lighthouse` | Lighthouse budget against `dist/` (runs in CI)          |
+| `npm run brand`      | Regenerate favicon, share image and `brand/` logo files |
 
 ## Add a client site
 
@@ -52,3 +53,7 @@ A card shows a live iframe only when the client site allows framing from this si
 - A merge to `main` runs CI again, then deploys to GitHub Pages.
 
 More: [ARCHITECTURE.md](ARCHITECTURE.md), [docs/DECISIONS.md](docs/DECISIONS.md). New work is scoped with the `align` skill and shipped with the `ship` skill (PR, review, merge), both in `.claude/skills/`.
+
+## Brand
+
+The flag mark is defined once in `src/lib/logo.ts`. After changing it, run `npm run brand` and commit the results: `public/favicon.svg`, `public/og.png` and the logo files in `brand/` (green and white, SVG + PNG at 512 and 1024px).

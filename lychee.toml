@@ -4,6 +4,8 @@ exclude = [
   # This site's own URLs (canonical, og:image) do not exist until the first deploy.
   '^https?://dangokangoo\.github\.io',
   '^https?://localhost',
+  # LinkedIn answers every automated checker with HTTP 999, so it can't be verified from CI.
+  '^https?://(www\.)?linkedin\.com(/|$)',
 ]
 max_retries = 3
 timeout = 20

@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "shots": "node scripts/shots.mjs",
-    "lighthouse": "lhci autorun"
+    "lighthouse": "lhci autorun",
+    "brand": "node scripts/brand.mjs"
   },
   "author": "",
   "license": "UNLICENSED",

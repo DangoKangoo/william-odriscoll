@@ -12,6 +12,8 @@ src/
   assets/shots/*.jpg      Screenshot per slug (written by npm run shots)
   data/embeds.json        Per slug: can it be framed from our origin? (written by npm run shots)
   lib/
+    logo.ts               The flag mark (path, stroke, brand colors)
+    shots.ts              Random golf-shot geometry for the hero loop
     sites.ts              Joins entries + screenshots + embed checks, sorted by order
     topo.ts               Seeded contour generator for the hero art
     url.ts                withBase() for base-path aware URLs
@@ -19,13 +21,16 @@ src/
     layout/               Header, Footer
     sections/             Hero, Work, Services, Contact (one per page section)
     ui/                   Button, BrowserFrame, SiteCard
-    art/                  TopoGreen, Icon, FairwayDivider (inline SVG)
+    art/                  TopoGreen, Logo, Icon, FairwayDivider (inline SVG)
   layouts/Base.astro      <head>, SEO and OG tags, fonts, reveal script
   pages/index.astro       Composes the sections
+  pages/privacy.astro     Privacy note (copy lives in the page)
   styles/
     tokens.css            Every color, size, radius and duration
     global.css            Reset, base type, shared utilities
 scripts/shots.mjs         Screenshot + framing check for each site
+scripts/brand.mjs         Favicon, share image and brand/ files from lib/logo.ts
+brand/                    Logo files for use outside the site (not deployed)
 .github/workflows/
   ci.yml                  PR checks (also reused by deploy)
   deploy.yml              main: CI, then build and deploy to GitHub Pages
