@@ -1,0 +1,24 @@
+{
+  "name": "William O'Driscoll",
+  "short_name": "W. O'Driscoll",
+  "description": "William O'Driscoll is a software engineer in St. John's, Newfoundland who designs and builds fast, modern websites for golf courses, simulators, clubs and golf brands.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#f7f6f1",
+  "theme_color": "#1f5f3f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
