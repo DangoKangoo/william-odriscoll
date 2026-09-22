@@ -18,8 +18,8 @@ const contours = contourPaths({
 const staticShot: Shot = {
   start: { x: 40, y: 560 },
   control: { x: 150, y: 20 },
-  land: { x: pin.x - 22, y: pin.y + 8 },
-  rest: { x: pin.x - 16, y: pin.y + 6 },
+  land: { x: pin.x - 30, y: pin.y + 10 },
+  rest: { x: pin.x - 22, y: pin.y + 8 },
 };
 ---
 
@@ -128,17 +128,19 @@ const staticShot: Shot = {
     const body = required<SVGCircleElement>("[data-ball-body]");
     const shadow = required<SVGEllipseElement>("[data-ball-shadow]");
 
+    const attr = (name: string) =>
+      `data-${name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
     const data = (name: string): string => {
       const value = svg.dataset[name];
       if (value === undefined || value === "") {
-        throw new Error(`[TopoGreen] Missing data-* attribute: ${name}`);
+        throw new Error(`[TopoGreen] Missing attribute ${attr(name)}`);
       }
       return value;
     };
     const number = (name: string): number => {
       const value = Number(data(name));
       if (!Number.isFinite(value)) {
-        throw new Error(`[TopoGreen] data-* attribute ${name} is not a number`);
+        throw new Error(`[TopoGreen] Attribute ${attr(name)} is not a number`);
       }
       return value;
     };
