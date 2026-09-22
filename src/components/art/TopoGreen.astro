@@ -100,7 +100,10 @@ const confettiColors = ["green", "sand", "flag", "white"];
     <line class="topo__pole" x1="0" y1="0" x2="0" y2={-POLE_HEIGHT}></line>
     <!-- Outer group: the hole-in-one wave (script). Inner group: the wind (CSS). -->
     <g data-flag>
-      <g class="topo__cloth">
+      <g
+        class="topo__cloth"
+        style={`--cloth-pivot-y: ${-POLE_HEIGHT + FLAG.height / 2}px`}
+      >
         <rect
           class="topo__flag"
           y={-POLE_HEIGHT}
@@ -112,7 +115,6 @@ const confettiColors = ["green", "sand", "flag", "white"];
           class="topo__flag-text"
           x={FLAG.width / 2}
           y={-POLE_HEIGHT + FLAG.height / 2}
-          aria-hidden="true"
         >
           {FLAG.text}
         </text>
@@ -480,9 +482,12 @@ const confettiColors = ["green", "sand", "flag", "white"];
   }
 
   /* Wind: the cloth sways from the pole, and a light band rolls across it. */
+  /* Pivot on the pole (x 0, flag middle) in the pin group's user space. Not
+     fill-box: the moving fold band is part of the group's box and would drag
+     the pivot off the pole. */
   .topo__cloth {
-    transform-box: fill-box;
-    transform-origin: left center;
+    transform-box: view-box;
+    transform-origin: 0 var(--cloth-pivot-y);
     animation: topo-wind 2.6s ease-in-out infinite;
   }
 
