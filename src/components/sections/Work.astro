@@ -1,10 +1,16 @@
 ---
 // Featured sites get a full preview card. Everything else is listed below as
-// compact links, so the grid stays tidy as the catalog grows.
+// compact links, so the grid stays tidy as the catalog grows. After the live
+// sites: one card per real project in progress, then an open "next" slot.
 import SiteCard from "../ui/SiteCard.astro";
+import InProgressCard from "../ui/InProgressCard.astro";
+import NextCard from "../ui/NextCard.astro";
+import { work } from "../../config/site";
 import { getSites } from "../../lib/sites";
+import { workStatusParts } from "../../lib/work-status";
 
 const sites = await getSites();
+const status = workStatusParts(work.inProgress, work.inTalks);
 const featured = sites.filter((site) => site.featured);
 const more = sites.filter((site) => !site.featured);
 ---
@@ -18,6 +24,19 @@ const more = sites.filter((site) => !site.featured);
         Real, live sites for golf businesses across Canada. Click any one to
         visit it.
       </p>
+      {status.length > 0 && (
+        <p class="work__status">
+          <span class="work__status-dot" aria-hidden="true"></span>
+          <span>
+            {status.map((part, i) => (
+              <span class="work__status-part">
+                {part}
+                {i < status.length - 1 && " · "}
+              </span>
+            ))}
+          </span>
+        </p>
+      )}
     </header>
 
     <ul class="work__grid">
@@ -26,6 +45,17 @@ const more = sites.filter((site) => !site.featured);
           <SiteCard site={site} index={index} />
         </li>
       ))}
+      {Array.from({ length: work.inProgress }, (_, i) => (
+        <li data-reveal style={`--reveal-index: ${featured.length + i}`}>
+          <InProgressCard />
+        </li>
+      ))}
+      <li
+        data-reveal
+        style={`--reveal-index: ${featured.length + work.inProgress}`}
+      >
+        <NextCard />
+      </li>
     </ul>
 
     {more.length > 0 && (
@@ -62,6 +92,32 @@ const more = sites.filter((site) => !site.featured);
 
   .work__grid > li {
     display: grid;
+  }
+
+  .work__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: start;
+    margin-top: var(--space-2);
+    padding: 0.35rem 0.9rem;
+    border-radius: var(--radius-md);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+  }
+
+  /* Each part stays whole, so a wrap breaks after the dot. */
+  .work__status-part {
+    white-space: nowrap;
+  }
+
+  .work__status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
   }
 
   @media (min-width: 60rem) {
