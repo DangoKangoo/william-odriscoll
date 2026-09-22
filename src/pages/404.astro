@@ -1,0 +1,70 @@
+---
+// GitHub Pages serves this for any missing URL under the site.
+import Base from "../layouts/Base.astro";
+import OutOfBounds from "../components/art/OutOfBounds.astro";
+import Button from "../components/ui/Button.astro";
+import { notFound, site } from "../config/site";
+import { withBase } from "../lib/url";
+---
+
+<Base
+  title={`Page not found | ${site.name}`}
+  description={notFound.body}
+  noindex
+>
+  <section class="section">
+    <div class="container not-found">
+      <div class="not-found__copy">
+        <p class="eyebrow">{notFound.eyebrow}</p>
+        <h1>{notFound.title}</h1>
+        <p class="not-found__body">{notFound.body}</p>
+        <div>
+          <Button href={withBase(notFound.cta.href)}>
+            {notFound.cta.label}
+          </Button>
+        </div>
+      </div>
+      <div class="not-found__art">
+        <OutOfBounds />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    display: grid;
+    align-items: center;
+    gap: var(--space-7);
+  }
+
+  .not-found__copy {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 30rem;
+  }
+
+  h1 {
+    font-size: var(--font-size-hero);
+    font-weight: 800;
+    line-height: var(--line-tight);
+    letter-spacing: -0.04em;
+  }
+
+  .not-found__body {
+    margin-bottom: var(--space-3);
+    color: var(--color-muted);
+    font-size: var(--font-size-lg);
+  }
+
+  .not-found__art {
+    width: min(100%, 34rem);
+    justify-self: center;
+  }
+
+  @media (min-width: 60rem) {
+    .not-found {
+      grid-template-columns: 1fr 1.1fr;
+    }
+  }
+</style>

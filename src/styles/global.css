@@ -13,6 +13,9 @@ html {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   background: var(--color-bg);
   color: var(--color-ink);
@@ -55,6 +58,11 @@ svg {
 
 ::selection {
   background: var(--color-sand);
+}
+
+/* Keeps the footer at the bottom on short pages (404, privacy). */
+.main {
+  flex: 1;
 }
 
 .container {

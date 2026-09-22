@@ -56,4 +56,4 @@ More: [ARCHITECTURE.md](ARCHITECTURE.md), [docs/DECISIONS.md](docs/DECISIONS.md)
 
 ## Brand
 
-The flag mark is defined once in `src/lib/logo.ts`. After changing it, run `npm run brand` and commit the results: `public/favicon.svg`, `public/og.png` and the logo files in `brand/` (green and white, SVG + PNG at 512 and 1024px).
+The flag mark is defined once in `src/lib/logo.ts`. After changing it, run `npm run brand` and commit the results: the favicons, home-screen icons and `manifest.webmanifest` in `public/`, `public/og.png`, and the logo files in `brand/` (green and white, SVG + PNG at 512 and 1024px).

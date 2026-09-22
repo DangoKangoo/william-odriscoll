@@ -21,15 +21,16 @@ src/
     layout/               Header, Footer
     sections/             Hero, Work, Services, Contact (one per page section)
     ui/                   Button, BrowserFrame, SiteCard
-    art/                  TopoGreen, Logo, Icon, FairwayDivider (inline SVG)
+    art/                  TopoGreen, OutOfBounds, Logo, Icon, FairwayDivider (inline SVG)
   layouts/Base.astro      <head>, SEO and OG tags, fonts, reveal script
   pages/index.astro       Composes the sections
   pages/privacy.astro     Privacy note (copy lives in the page)
+  pages/404.astro         Not-found page, served by GitHub Pages for any missing URL
   styles/
     tokens.css            Every color, size, radius and duration
     global.css            Reset, base type, shared utilities
 scripts/shots.mjs         Screenshot + framing check for each site
-scripts/brand.mjs         Favicon, share image and brand/ files from lib/logo.ts
+scripts/brand.mjs         Favicons, app icons, manifest, share image and brand/ files from lib/logo.ts
 brand/                    Logo files for use outside the site (not deployed)
 .github/workflows/
   ci.yml                  PR checks (also reused by deploy)

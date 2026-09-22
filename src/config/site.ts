@@ -63,3 +63,10 @@ export const contact = {
   title: "Let's build your club's site.",
   body: "Tell me about your course, simulator or shop. I reply within a day.",
 } as const;
+
+export const notFound = {
+  eyebrow: "404",
+  title: "Out of bounds.",
+  body: "This page doesn't exist. Let's get you back on the fairway.",
+  cta: { href: "/", label: "Back to the fairway" },
+} as const;
