@@ -8,6 +8,19 @@ export const site = {
   description:
     "William O'Driscoll is a software engineer in St. John's, Newfoundland who designs and builds fast, modern websites for golf courses, simulators, clubs and golf brands.",
   linkedin: "https://www.linkedin.com/in/will-odriscoll/",
+  // Homepage <title>. Leads with the service people search for.
+  seoTitle: "Golf Website Design, St. John's NL | William O'Driscoll",
+  // For structured data (lib/structured-data.ts).
+  jobTitle: "Software Engineer",
+  address: {
+    locality: "St. John's",
+    region: "NL",
+    country: "CA",
+  },
+  areaServed: "Canada",
+  // Google Search Console HTML-tag verification code (the content="..." value).
+  // Leave empty until you have it; no tag is rendered while empty.
+  googleSiteVerification: "",
   // Paths are relative to the site root; components prefix them with withBase().
   nav: [
     { href: "/#work", label: "Work" },

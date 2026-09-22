@@ -6,9 +6,18 @@ import Work from "../components/sections/Work.astro";
 import Services from "../components/sections/Services.astro";
 import Contact from "../components/sections/Contact.astro";
 import { site } from "../config/site";
+import { businessSchema } from "../lib/structured-data";
+import { withBase } from "../lib/url";
+
+const absolute = (path: string) => new URL(withBase(path), Astro.site);
+const schema = businessSchema(absolute("/"), absolute);
 ---
 
-<Base title={`${site.name} | ${site.role}`} description={site.description}>
+<Base
+  title={site.seoTitle}
+  description={site.description}
+  structuredData={schema}
+>
   <Hero />
   <FairwayDivider fill="var(--color-surface)" background="var(--color-bg)" />
   <Work />
