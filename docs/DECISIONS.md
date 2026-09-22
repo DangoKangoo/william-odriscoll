@@ -89,3 +89,11 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
   **Why:** they show real momentum; placeholder cards for projects that don't exist would mislead prospects.
 - In-progress projects are never named until they launch.
 - A statement sits between Services and Contact: "This site is simple on purpose. The detail goes into yours." It's large, centered, with the flag mark above.
+
+## 2026-09-22: Waving flag
+
+- The hero flag is about 1.5x bigger: a rectangular golf pennant in flag red with "WO’D" in bold white (Manrope, typographic apostrophe).
+- It ripples gently and never stops: the cloth sways from the pole, and a soft light band rolls across it like folds, about 2.5s per cycle. The text moves with the cloth.
+  **Why:** William asked for it. This adds a looping flag to the "subtle motion" set, which originally left one out.
+- The wind pauses with the shot loop (off screen, hidden tab) and is off under reduced motion. The hole-in-one wave plays on top.
+- Only the hero flag changes; the logo, 404 art and share card keep theirs.

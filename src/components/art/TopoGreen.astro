@@ -24,6 +24,10 @@ const staticShot: Shot = {
   ace: false,
 };
 
+// The pin flag: a rectangular pennant at the top of the pole, in art units.
+const POLE_HEIGHT = 138;
+const FLAG = { width: 66, height: 40, text: "WO’D" };
+
 // Confetti pieces for the hole-in-one celebration, cycling through brand colors.
 const CONFETTI_PIECES = 14;
 const confettiColors = ["green", "sand", "flag", "white"];
@@ -33,7 +37,7 @@ const confettiColors = ["green", "sand", "flag", "white"];
   class="topo"
   viewBox={`0 0 ${SIZE} ${SIZE}`}
   role="img"
-  aria-label="Contour map of a golf green with a flag and a ball flight landing near the pin"
+  aria-label={`Contour map of a golf green with a flag reading ${FLAG.text} and a ball flight landing near the pin`}
   data-topo
   data-pin-x={pin.x}
   data-pin-y={pin.y}
@@ -53,6 +57,20 @@ const confettiColors = ["green", "sand", "flag", "white"];
         stop-opacity="0"
       ></stop>
     </radialGradient>
+    <!-- Soft light band that rolls across the flag, like folds in the cloth. -->
+    <linearGradient id="topo-fold" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"></stop>
+      <stop offset="0.5" stop-color="#fff" stop-opacity="0.28"></stop>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
+    </linearGradient>
+    <clipPath id="topo-cloth-clip">
+      <rect
+        y={-POLE_HEIGHT}
+        width={FLAG.width}
+        height={FLAG.height}
+        rx="2"
+      ></rect>
+    </clipPath>
   </defs>
 
   <ellipse
@@ -79,8 +97,39 @@ const confettiColors = ["green", "sand", "flag", "white"];
 
   <g class="topo__pin" transform={`translate(${pin.x} ${pin.y})`}>
     <ellipse class="topo__cup" rx="9" ry="4"></ellipse>
-    <line class="topo__pole" x1="0" y1="0" x2="0" y2="-92"></line>
-    <path class="topo__flag" d="M0 -92 L44 -79 L0 -66 Z" data-flag></path>
+    <line class="topo__pole" x1="0" y1="0" x2="0" y2={-POLE_HEIGHT}></line>
+    <!-- Outer group: the hole-in-one wave (script). Inner group: the wind (CSS). -->
+    <g data-flag>
+      <g
+        class="topo__cloth"
+        style={`--cloth-pivot-y: ${-POLE_HEIGHT + FLAG.height / 2}px`}
+      >
+        <rect
+          class="topo__flag"
+          y={-POLE_HEIGHT}
+          width={FLAG.width}
+          height={FLAG.height}
+          rx="2"
+        ></rect>
+        <text
+          class="topo__flag-text"
+          x={FLAG.width / 2}
+          y={-POLE_HEIGHT + FLAG.height / 2}
+        >
+          {FLAG.text}
+        </text>
+        <g clip-path="url(#topo-cloth-clip)">
+          <rect
+            class="topo__fold"
+            x={-FLAG.width}
+            y={-POLE_HEIGHT}
+            width={FLAG.width}
+            height={FLAG.height}
+            fill="url(#topo-fold)"
+          ></rect>
+        </g>
+      </g>
+    </g>
   </g>
 
   <g data-shot>
@@ -172,7 +221,7 @@ const confettiColors = ["green", "sand", "flag", "white"];
     const ball = required<SVGGElement>("[data-ball]");
     const body = required<SVGCircleElement>("[data-ball-body]");
     const shadow = required<SVGEllipseElement>("[data-ball-shadow]");
-    const flag = required<SVGPathElement>("[data-flag]");
+    const flag = required<SVGGElement>("[data-flag]");
     const ripples = [
       ...svg.querySelectorAll<SVGEllipseElement>("[data-ripple]"),
     ];
@@ -353,6 +402,8 @@ const confettiColors = ["green", "sand", "flag", "white"];
         !reducedMotion.matches &&
         onScreen &&
         document.visibilityState === "visible";
+      // The flag's wind is a CSS animation; pause it along with the shots.
+      svg.classList.toggle("is-paused", !active);
       if (active && !frame) {
         lastTime = null;
         frame = requestAnimationFrame(tick);
@@ -418,6 +469,67 @@ const confettiColors = ["green", "sand", "flag", "white"];
 
   .topo__flag {
     fill: var(--color-flag);
+  }
+
+  .topo__flag-text {
+    fill: #fff;
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+
+  /* Wind: the cloth sways from the pole, and a light band rolls across it. */
+  /* Pivot on the pole (x 0, flag middle) in the pin group's user space. Not
+     fill-box: the moving fold band is part of the group's box and would drag
+     the pivot off the pole. */
+  .topo__cloth {
+    transform-box: view-box;
+    transform-origin: 0 var(--cloth-pivot-y);
+    animation: topo-wind 2.6s ease-in-out infinite;
+  }
+
+  .topo__fold {
+    animation: topo-fold 2.6s linear infinite;
+  }
+
+  .topo.is-paused .topo__cloth,
+  .topo.is-paused .topo__fold {
+    animation-play-state: paused;
+  }
+
+  @keyframes topo-wind {
+    0%,
+    100% {
+      transform: skewY(0deg) scaleX(1);
+    }
+    25% {
+      transform: skewY(-3deg) scaleX(0.96);
+    }
+    50% {
+      transform: skewY(1deg) scaleX(0.99);
+    }
+    75% {
+      transform: skewY(3deg) scaleX(0.95);
+    }
+  }
+
+  @keyframes topo-fold {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(132px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .topo__cloth,
+    .topo__fold {
+      animation: none;
+    }
   }
 
   .topo__ball circle {
