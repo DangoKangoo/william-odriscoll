@@ -1,0 +1,101 @@
+---
+// The last card in the work grid: an open slot inviting the next client.
+import { work } from "../../config/site";
+---
+
+<a class="next" href={work.nextCard.cta.href}>
+  <span class="next__plus" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 5v14M5 12h14"></path>
+    </svg>
+  </span>
+  <span class="next__title">{work.nextCard.title}</span>{" "}
+  <span class="next__body">{work.nextCard.body}</span>{" "}
+  <span class="next__cta">
+    {work.nextCard.cta.label}
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 8h10M9 4l4 4-4 4"></path>
+    </svg>
+  </span>
+</a>
+
+<style>
+  .next {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: var(--space-3);
+    height: 100%;
+    min-height: 20rem;
+    padding: var(--space-6);
+    border: 2px dashed var(--color-line);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) ease,
+      background-color var(--duration-fast) ease;
+  }
+
+  .next:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .next__plus {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: var(--space-2);
+    border-radius: 50%;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  .next__plus svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .next__title {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: var(--font-size-lg);
+    font-weight: 750;
+    letter-spacing: -0.02em;
+  }
+
+  .next__body {
+    color: var(--color-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .next__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    color: var(--color-accent);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+  }
+
+  .next__cta svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: translate var(--duration-fast) ease;
+  }
+
+  .next:hover .next__cta svg {
+    translate: 3px 0;
+  }
+</style>

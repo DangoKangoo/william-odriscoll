@@ -80,3 +80,12 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - The ace celebration (about 1.3s): two soft green rings ripple out from the cup, the flag gives one wave, and a small confetti burst (14 pieces in brand colors) falls and fades.
 - Normal shots are unchanged and still stop at least 22 units from the pin.
 - Reduced motion and no JavaScript: the same still shot, with no aces.
+
+## 2026-09-22: Work status and statement
+
+- The work grid shows live client sites, then one anonymous "In progress" card per real project in progress, then a "Your course could be next" card that links to Contact.
+- A status line under the Work heading reads "Currently building N site(s) · in talks with M more".
+- The in-progress count and the in-talks count (`work.inProgress` and `work.inTalks` in `config/site.ts`) drive both the cards and the line. They must stay true.
+  **Why:** they show real momentum; placeholder cards for projects that don't exist would mislead prospects.
+- In-progress projects are never named until they launch.
+- A statement sits between Services and Contact: "This site is simple on purpose. The detail goes into yours." It's large, centered, with the flag mark above.

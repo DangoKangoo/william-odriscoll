@@ -42,6 +42,18 @@ npm run dev                        # http://localhost:4321/william-odriscoll/
 
 The build fails with a clear message if a field is wrong or the screenshot is missing.
 
+### Work in progress
+
+Projects that haven't launched yet aren't YAML entries. Set the two counts in `src/config/site.ts`:
+
+```ts
+export const work = {
+  inProgress: 1, // one anonymous "In progress" card each
+  inTalks: 5, // shown in the status line only
+```
+
+They drive the "Currently building 1 site · in talks with 5 more" line and the in-progress cards. Keep them true. When a project launches, lower `inProgress` and add its YAML entry.
+
 ### Live previews
 
 A card shows a live iframe only when the client site allows framing from this site's origin. To allow it, add `https://dangokangoo.github.io` to that site's `Content-Security-Policy: frame-ancestors`, then re-run `npm run shots`.
