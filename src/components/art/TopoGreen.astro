@@ -1,24 +1,38 @@
 ---
-// Hero illustration: contour map of a green, a flag, and a ball flight that
-// draws itself once on load.
+// Hero illustration: contour map of a green and a flag, with random shots
+// flying in from the left one at a time, on a loop. The markup renders one
+// finished shot, which is what reduced-motion and no-JS visitors see.
 import { contourPaths } from "../../lib/topo";
+import { flightPath, type Shot } from "../../lib/shots";
 
-const green = { x: 372, y: 250 };
+const SIZE = 600;
+const pin = { x: 372, y: 250 };
 const contours = contourPaths({
-  cx: green.x,
-  cy: green.y,
+  cx: pin.x,
+  cy: pin.y,
   rings: 14,
   spacing: 26,
   seed: 18,
 });
-const flight = `M 40 560 Q 150 20 ${green.x - 22} ${green.y + 8}`;
+
+const staticShot: Shot = {
+  start: { x: 40, y: 560 },
+  control: { x: 150, y: 20 },
+  land: { x: pin.x - 30, y: pin.y + 10 },
+  rest: { x: pin.x - 22, y: pin.y + 8 },
+};
 ---
 
 <svg
   class="topo"
-  viewBox="0 0 600 600"
+  viewBox={`0 0 ${SIZE} ${SIZE}`}
   role="img"
   aria-label="Contour map of a golf green with a flag and a ball flight landing near the pin"
+  data-topo
+  data-pin-x={pin.x}
+  data-pin-y={pin.y}
+  data-size={SIZE}
+  data-static-shot={JSON.stringify(staticShot)}
 >
   <defs>
     <radialGradient id="topo-green" cx="50%" cy="50%" r="50%">
@@ -33,14 +47,11 @@ const flight = `M 40 560 Q 150 20 ${green.x - 22} ${green.y + 8}`;
         stop-opacity="0"
       ></stop>
     </radialGradient>
-    <mask id="topo-flight-mask">
-      <path class="topo__flight-draw" d={flight} pathLength="1"></path>
-    </mask>
   </defs>
 
   <ellipse
-    cx={green.x}
-    cy={green.y}
+    cx={pin.x}
+    cy={pin.y}
     rx="150"
     ry="120"
     fill="url(#topo-green)"
@@ -55,19 +66,188 @@ const flight = `M 40 560 Q 150 20 ${green.x - 22} ${green.y + 8}`;
     ))}
   </g>
 
-  <path class="topo__flight" d={flight} mask="url(#topo-flight-mask)"></path>
-
-  <g class="topo__pin" transform={`translate(${green.x} ${green.y})`}>
+  <g class="topo__pin" transform={`translate(${pin.x} ${pin.y})`}>
     <ellipse class="topo__cup" rx="9" ry="4"></ellipse>
     <line class="topo__pole" x1="0" y1="0" x2="0" y2="-92"></line>
     <path class="topo__flag" d="M0 -92 L44 -79 L0 -66 Z"></path>
   </g>
 
-  <g class="topo__ball" transform={`translate(${green.x - 22} ${green.y + 8})`}>
-    <ellipse class="topo__ball-shadow" cx="2" cy="6" rx="8" ry="2.5"></ellipse>
-    <circle r="7"></circle>
+  <g data-shot>
+    <path class="topo__flight" d={flightPath(staticShot, 1)} data-flight></path>
+    <g
+      class="topo__ball"
+      transform={`translate(${staticShot.rest.x} ${staticShot.rest.y})`}
+      data-ball
+    >
+      <ellipse
+        class="topo__ball-shadow"
+        cx="2"
+        cy="6"
+        rx="8"
+        ry="2.5"
+        data-ball-shadow
+      ></ellipse>
+      <circle r="7" data-ball-body></circle>
+    </g>
   </g>
 </svg>
+
+<script>
+  import {
+    flightPath,
+    pointBetween,
+    pointOnFlight,
+    randomShot,
+    type Shot,
+    type ShotArea,
+  } from "../../lib/shots";
+
+  // Phase lengths in ms. One full shot is about 4s.
+  const PHASES = [
+    ["flight", 1600],
+    ["roll", 600],
+    ["hold", 700],
+    ["fade", 500],
+    ["gap", 400],
+  ] as const;
+  type Phase = (typeof PHASES)[number][0];
+
+  const easeOutQuad = (t: number) => 1 - (1 - t) * (1 - t);
+  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  function startShotLoop(svg: SVGSVGElement) {
+    const required = <T extends SVGElement>(selector: string): T => {
+      const el = svg.querySelector<T>(selector);
+      if (!el)
+        throw new Error(`[TopoGreen] Shot loop markup is missing ${selector}`);
+      return el;
+    };
+    const group = required<SVGGElement>("[data-shot]");
+    const flight = required<SVGPathElement>("[data-flight]");
+    const ball = required<SVGGElement>("[data-ball]");
+    const body = required<SVGCircleElement>("[data-ball-body]");
+    const shadow = required<SVGEllipseElement>("[data-ball-shadow]");
+
+    const attr = (name: string) =>
+      `data-${name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
+    const data = (name: string): string => {
+      const value = svg.dataset[name];
+      if (value === undefined || value === "") {
+        throw new Error(`[TopoGreen] Missing attribute ${attr(name)}`);
+      }
+      return value;
+    };
+    const number = (name: string): number => {
+      const value = Number(data(name));
+      if (!Number.isFinite(value)) {
+        throw new Error(`[TopoGreen] Attribute ${attr(name)} is not a number`);
+      }
+      return value;
+    };
+
+    const area: ShotArea = {
+      pin: { x: number("pinX"), y: number("pinY") },
+      size: number("size"),
+    };
+
+    // Start on the finished static shot so the handoff from the no-JS markup
+    // is a fade, not a jump. Random shots take over from the next loop.
+    const staticShot: Shot = JSON.parse(data("staticShot"));
+    let shot = staticShot;
+    let phaseIndex = PHASES.findIndex(([phase]) => phase === "hold");
+    let phaseElapsed = 0;
+    let lastTime: number | null = null;
+    let frame = 0;
+    let onScreen = false;
+
+    const placeBall = (x: number, y: number, scale: number) => {
+      ball.setAttribute(
+        "transform",
+        `translate(${x.toFixed(1)} ${y.toFixed(1)})`,
+      );
+      body.setAttribute("transform", `scale(${scale.toFixed(3)})`);
+    };
+
+    function render(phase: Phase, p: number) {
+      if (phase === "flight") {
+        const t = easeOutQuad(p);
+        const at = pointOnFlight(shot, t);
+        flight.setAttribute("d", flightPath(shot, t));
+        // Slightly bigger at the top of the arc, as if nearer the viewer.
+        placeBall(at.x, at.y, 1 + 0.35 * Math.sin(Math.PI * t));
+        shadow.style.opacity = "0";
+        group.style.opacity = "1";
+      } else if (phase === "roll") {
+        const at = pointBetween(shot.land, shot.rest, easeOutCubic(p));
+        placeBall(at.x, at.y, 1);
+        shadow.style.opacity = "";
+      } else if (phase === "fade") {
+        group.style.opacity = String(1 - p);
+      } else if (phase === "gap") {
+        group.style.opacity = "0";
+      }
+    }
+
+    function tick(now: number) {
+      const dt = lastTime === null ? 0 : now - lastTime;
+      lastTime = now;
+      phaseElapsed += dt;
+
+      // Advance through any phases that finished since the last frame.
+      while (phaseElapsed >= PHASES[phaseIndex][1]) {
+        render(PHASES[phaseIndex][0], 1);
+        phaseElapsed -= PHASES[phaseIndex][1];
+        phaseIndex = (phaseIndex + 1) % PHASES.length;
+        if (phaseIndex === 0) shot = randomShot(area);
+      }
+
+      const [phase, duration] = PHASES[phaseIndex];
+      render(phase, phaseElapsed / duration);
+      frame = requestAnimationFrame(tick);
+    }
+
+    // Back to the finished static shot, as reduced-motion visitors see it.
+    function showStatic() {
+      shot = staticShot;
+      phaseIndex = PHASES.findIndex(([phase]) => phase === "hold");
+      phaseElapsed = 0;
+      flight.setAttribute("d", flightPath(staticShot, 1));
+      placeBall(staticShot.rest.x, staticShot.rest.y, 1);
+      shadow.style.opacity = "";
+      group.style.opacity = "1";
+    }
+
+    // Only runs while motion is allowed, the hero is on screen and the tab is visible.
+    function sync() {
+      const active =
+        !reducedMotion.matches &&
+        onScreen &&
+        document.visibilityState === "visible";
+      if (active && !frame) {
+        lastTime = null;
+        frame = requestAnimationFrame(tick);
+      } else if (!active && frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    }
+
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      sync();
+    }).observe(svg);
+    document.addEventListener("visibilitychange", sync);
+    reducedMotion.addEventListener("change", () => {
+      if (reducedMotion.matches) showStatic();
+      sync();
+    });
+  }
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  document
+    .querySelectorAll<SVGSVGElement>("[data-topo]")
+    .forEach(startShotLoop);
+</script>
 
 <style>
   .topo {
@@ -96,15 +276,6 @@ const flight = `M 40 560 Q 150 20 ${green.x - 22} ${green.y + 8}`;
     stroke-dasharray: 2 9;
   }
 
-  .topo__flight-draw {
-    fill: none;
-    stroke: #fff;
-    stroke-width: 8;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: topo-draw var(--duration-slow) var(--ease-out) 300ms forwards;
-  }
-
   .topo__cup {
     fill: var(--color-accent-deep);
   }
@@ -128,34 +299,5 @@ const flight = `M 40 560 Q 150 20 ${green.x - 22} ${green.y + 8}`;
   .topo__ball-shadow {
     fill: var(--color-ink);
     opacity: 0.18;
-  }
-
-  .topo__ball {
-    opacity: 0;
-    animation: topo-land 400ms var(--ease-out) 1750ms forwards;
-  }
-
-  @keyframes topo-draw {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  @keyframes topo-land {
-    to {
-      opacity: 1;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .topo__flight-draw {
-      stroke-dashoffset: 0;
-      animation: none;
-    }
-
-    .topo__ball {
-      opacity: 1;
-      animation: none;
-    }
   }
 </style>
