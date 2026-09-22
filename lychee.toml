@@ -1,0 +1,11 @@
+# Checks every external link in the built site (client sites, fonts).
+# Internal links use the Pages base path, which only exists once deployed.
+scheme = ["https", "http"]
+exclude = [
+  # This site's own URLs (canonical, og:image) do not exist until the first deploy.
+  '^https?://dangokangoo\.github\.io',
+  '^https?://localhost',
+]
+max_retries = 3
+timeout = 20
+accept = ["200..=299", "429"]
