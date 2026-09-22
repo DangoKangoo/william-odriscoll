@@ -11,12 +11,9 @@ const year = new Date().getFullYear();
     <div class="footer__top">
       <a class="footer__brand" href={withBase("/")}>
         <span class="footer__mark">
-          <Logo size={28} />
+          <Logo />
         </span>
-        <span>
-          <strong>{site.name}</strong>{" "}
-          <span class="footer__tagline">{site.role}</span>
-        </span>
+        <strong>{site.name}</strong>
       </a>
 
       <nav aria-label="Footer">
@@ -39,7 +36,6 @@ const year = new Date().getFullYear();
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4v11H3v-11Zm6.5 0h3.83v1.5h.05c.53-1 1.84-1.8 3.62-1.8 3.87 0 4.5 2.4 4.5 5.53v5.77h-4v-5.1c0-1.22-.02-2.8-1.7-2.8-1.72 0-1.98 1.34-1.98 2.72v5.18h-4v-11Z"></path>
         </svg>
-        LinkedIn
       </a>
     </div>
 
@@ -83,22 +79,18 @@ const year = new Date().getFullYear();
     }
   }
 
+  /* Same flag size and spacing as the header brand. */
   .footer__brand {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
 
   .footer__brand strong {
-    display: block;
     color: var(--color-on-accent);
     font-family: var(--font-display), system-ui, sans-serif;
     font-size: var(--font-size-md);
     letter-spacing: -0.02em;
-  }
-
-  .footer__tagline {
-    font-size: var(--font-size-xs);
   }
 
   .footer__mark {
@@ -115,15 +107,17 @@ const year = new Date().getFullYear();
     list-style: none;
   }
 
+  /* Padding keeps the icon-only link a comfortable tap target. */
   .footer__social {
     display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
+    justify-self: start;
+    padding: var(--space-2);
+    margin: calc(-1 * var(--space-2));
   }
 
   .footer__social svg {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     fill: currentColor;
   }
 

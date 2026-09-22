@@ -44,8 +44,13 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - `npm run brand` regenerates the favicon, the share image and the `brand/` files from that one source, so they can't drift apart.
 - Brand files in `brand/` (repo only, not published): mark only, green and white, SVG + PNG at 512 and 1024px.
 - Share image: a branded 1200x630 card (contours, flag, name, tagline, location) replaces the hero screenshot.
-- Footer: logo, name and tagline; nav (Work, Services, Contact, Privacy); LinkedIn; then the © line and location.
+- ~~Footer: logo, name and tagline; nav (Work, Services, Contact, Privacy); LinkedIn; then the © line and location.~~ Superseded 2026-09-22, see "Footer tweaks".
 - LinkedIn (`linkedin.com/in/will-odriscoll`) is the only personal link on the site. No GitHub.
 - `/privacy`: a short plain-language note. No cookies, no tracking, emails used only to reply, never sold or shared, deleted on request, hosted on GitHub Pages.
 - The visible email under "Email me" stays.
   **Why:** mailto doesn't work for webmail users who have no mail app set up.
+
+## 2026-09-22: Footer tweaks
+
+- Footer: flag and name (no tagline); nav (Work, Services, Contact, Privacy); LinkedIn as an icon only; then the © line and location.
+- The footer flag uses the same size and spacing as the header flag, so it lines up with the name.
