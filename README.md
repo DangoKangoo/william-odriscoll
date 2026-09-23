@@ -44,15 +44,17 @@ The build fails with a clear message if a field is wrong or the screenshot is mi
 
 ### Work in progress
 
-Projects that haven't launched yet aren't YAML entries. Set the two counts in `src/config/site.ts`:
+Each "New client site" card in the work section is one JSON file in `src/content/in-progress/`:
 
-```ts
-export const work = {
-  inProgress: 1, // one anonymous "In progress" card each
-  inTalks: 5, // shown in the status line only
+```json
+{
+  "title": "New client site",
+  "body": "Design and build under way. It'll show up here when it launches.",
+  "order": 2
+}
 ```
 
-They drive the "Currently building 1 site · in talks with 5 more" line and the in-progress cards. Keep them true. When a project launches, lower `inProgress` and add its YAML entry.
+To add a card, copy a file (e.g. `project-3.json`) and bump `order`. When the project launches, delete its file and add the live site's YAML entry. The build fails if a field is missing.
 
 ### Live previews
 

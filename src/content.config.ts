@@ -18,4 +18,15 @@ const sites = defineCollection({
   }),
 });
 
-export const collections = { sites };
+// One JSON file per project that's in progress (shown anonymously, no link).
+// Copy a file to add a card; delete it when the project launches.
+const inProgress = defineCollection({
+  loader: glob({ pattern: "*.json", base: "./src/content/in-progress" }),
+  schema: z.object({
+    title: z.string().min(1),
+    body: z.string().min(1).max(160),
+    order: z.number().int().nonnegative(),
+  }),
+});
+
+export const collections = { sites, inProgress };

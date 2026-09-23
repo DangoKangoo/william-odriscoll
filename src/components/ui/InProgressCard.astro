@@ -2,7 +2,13 @@
 // A real project that hasn't launched yet: a wireframe "under construction"
 // inside the browser frame. Anonymous on purpose, and no link.
 import BrowserFrame from "./BrowserFrame.astro";
-import { work } from "../../config/site";
+
+interface Props {
+  title: string;
+  body: string;
+}
+
+const { title, body } = Astro.props;
 ---
 
 <article class="card">
@@ -32,8 +38,8 @@ import { work } from "../../config/site";
       <span class="card__dot" aria-hidden="true"></span>
       <span>Building now</span>
     </div>
-    <h3>{work.inProgressCard.title}</h3>
-    <p>{work.inProgressCard.body}</p>
+    <h3>{title}</h3>
+    <p>{body}</p>
   </div>
 </article>
 

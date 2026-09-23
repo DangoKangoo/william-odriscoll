@@ -72,15 +72,8 @@ export const services: ReadonlyArray<{
   },
 ];
 
-// Keep these two numbers true: they drive the in-progress cards and the
-// status line in the work section.
+// In-progress cards live in src/content/in-progress (one JSON file each).
 export const work = {
-  inProgress: 1,
-  inTalks: 5,
-  inProgressCard: {
-    title: "New client site",
-    body: "Design and build under way. It'll show up here when it launches.",
-  },
   nextCard: {
     title: "Your course could be next.",
     body: "Courses, simulators, clubs and golf brands.",

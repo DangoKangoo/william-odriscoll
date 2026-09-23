@@ -1,9 +1,16 @@
 ---
 // The last card in the work grid: an open slot inviting the next client.
 import { work } from "../../config/site";
+
+interface Props {
+  /** Spans a full grid row, so it's shorter than a regular card. */
+  wide?: boolean;
+}
+
+const { wide = false } = Astro.props;
 ---
 
-<a class="next" href={work.nextCard.cta.href}>
+<a class:list={["next", { "next--wide": wide }]} href={work.nextCard.cta.href}>
   <span class="next__plus" aria-hidden="true">
     <svg viewBox="0 0 24 24">
       <path d="M12 5v14M5 12h14"></path>
@@ -35,6 +42,11 @@ import { work } from "../../config/site";
     transition:
       border-color var(--duration-fast) ease,
       background-color var(--duration-fast) ease;
+  }
+
+  .next--wide {
+    min-height: 0;
+    padding-block: var(--space-7);
   }
 
   .next:hover {
