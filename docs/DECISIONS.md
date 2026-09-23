@@ -47,7 +47,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - ~~Footer: logo, name and tagline; nav (Work, Services, Contact, Privacy); LinkedIn; then the © line and location.~~ Superseded 2026-09-22, see "Footer tweaks".
 - LinkedIn (`linkedin.com/in/will-odriscoll`) is the only personal link on the site. No GitHub.
 - `/privacy`: a short plain-language note. No cookies, no tracking, emails used only to reply, never sold or shared, deleted on request, hosted on GitHub Pages.
-- The visible email under "Email me" stays.
+- ~~The visible email under "Email me" stays.~~ Superseded 2026-09-22, see "Rename to W. O'Design".
   **Why:** mailto doesn't work for webmail users who have no mail app set up.
 
 ## 2026-09-22: Footer tweaks
@@ -92,8 +92,8 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 ## 2026-09-22: Waving flag
 
-- The hero flag is about 1.5x bigger: a rectangular golf pennant in flag red with "WO’D" in bold white (Manrope, typographic apostrophe).
-- It ripples gently and never stops: the cloth sways from the pole, and a soft light band rolls across it like folds, about 2.5s per cycle. The text moves with the cloth.
+- ~~The hero flag is about 1.5x bigger: a rectangular golf pennant in flag red with "WO’D" in bold white (Manrope, typographic apostrophe).~~ Superseded 2026-09-22, see "Rename to W. O'Design".
+- It ripples gently and never stops: the cloth sways from the pole, and a soft light band rolls across it like folds, about 2.5s per cycle. The text moves with the cloth (now the logo mark, see "Rename to W. O'Design").
   **Why:** William asked for it. This adds a looping flag to the "subtle motion" set, which originally left one out.
 - The wind pauses with the shot loop (off screen, hidden tab) and is off under reduced motion. The hole-in-one wave plays on top.
 - Only the hero flag changes; the logo, 404 art and share card keep theirs.
@@ -103,4 +103,16 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Each in-progress card is one JSON file in `src/content/in-progress/` (title, body, order), validated at build time. Copy a file to add a card; delete it when the project launches.
 - Two in-progress cards, both "New client site". William's call.
 - The status line is removed, along with `work.inProgress` and `work.inTalks`.
-- When the cards before it fill whole rows, the "next" card spans the row as a shorter banner.
+- ~~When the cards before it fill whole rows, the "next" card spans the row as a shorter banner.~~ Superseded 2026-09-22, see "Rename to W. O'Design".
+
+## 2026-09-22: Rename to W. O'Design
+
+- The business name is **W. O'Design** (`site.name`). It's used in the header, footer, page titles, share card, manifest and structured data.
+- William O'Driscoll (`site.founder`) appears in the footer ("© 2026 W. O'Design · William O'Driscoll"), in the site description, and as the founder in the structured data.
+- The flag mark stays the logo.
+- The hero flag is green (`--color-accent`), with the white flag logo in place of "WO’D". The size and wind are unchanged.
+- The contact section shows only the "Email me" button. The address stays on the privacy page and in the structured data.
+  **Why:** William's call for a cleaner section. Accepted tradeoff: visitors on webmail with no mail app set up won't see the address on the homepage.
+- The "next" card is the same size as the other cards and sits in the grid like them (left column today). Rows are equal height on desktop.
+- A mirrored fairway divider sits between Work and Services.
+- The repo, the URL and the GitHub Pages path stay `william-odriscoll`.

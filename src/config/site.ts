@@ -1,15 +1,17 @@
 // Site-wide copy and settings. Client sites live in src/content/sites.
 
 export const site = {
-  name: "William O'Driscoll",
+  // The business name shown on the site. The founder is the person behind it.
+  name: "W. O'Design",
+  founder: "William O'Driscoll",
   role: "Websites for golf businesses",
   location: "St. John's, Newfoundland",
   email: "willod17@outlook.com",
   description:
-    "William O'Driscoll is a software engineer in St. John's, Newfoundland who designs and builds fast, modern websites for golf courses, simulators, clubs and golf brands.",
+    "W. O'Design is William O'Driscoll, a software engineer in St. John's, Newfoundland who designs and builds fast, modern websites for golf courses, simulators, clubs and golf brands.",
   linkedin: "https://www.linkedin.com/in/will-odriscoll/",
   // Homepage <title>. Leads with the service people search for.
-  seoTitle: "Golf Website Design, St. John's NL | William O'Driscoll",
+  seoTitle: "Golf Website Design, St. John's NL | W. O'Design",
   // For structured data (lib/structured-data.ts).
   jobTitle: "Software Engineer",
   address: {

@@ -1,11 +1,13 @@
 ---
-// Gentle fairway curve between two sections. `fill` is the color of the section below.
+// Gentle fairway curve between two sections. `fill` is the color of the section
+// below; `mirror` flips the curve left to right.
 interface Props {
   fill: string;
   background: string;
+  mirror?: boolean;
 }
 
-const { fill, background } = Astro.props;
+const { fill, background, mirror = false } = Astro.props;
 ---
 
 <div
@@ -13,7 +15,11 @@ const { fill, background } = Astro.props;
   style={`--divider-fill: ${fill}; --divider-bg: ${background}`}
   aria-hidden="true"
 >
-  <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
+  <svg
+    viewBox="0 0 1440 90"
+    preserveAspectRatio="none"
+    class:list={{ "divider--mirror": mirror }}
+  >
     <path
       d="M0 58C240 18 480 8 720 30s520 52 720 14V90H0Z"
       opacity="0.5"
@@ -32,5 +38,9 @@ const { fill, background } = Astro.props;
     width: 100%;
     height: clamp(40px, 6vw, 90px);
     fill: var(--divider-fill);
+  }
+
+  .divider--mirror {
+    transform: scaleX(-1);
   }
 </style>

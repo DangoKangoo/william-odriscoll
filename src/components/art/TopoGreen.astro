@@ -5,6 +5,7 @@
 // what reduced-motion and no-JS visitors see.
 import { contourPaths } from "../../lib/topo";
 import { flightPath, type Shot } from "../../lib/shots";
+import { LOGO_PATH, LOGO_STROKE_WIDTH } from "../../lib/logo";
 
 const SIZE = 600;
 const pin = { x: 372, y: 250 };
@@ -26,7 +27,9 @@ const staticShot: Shot = {
 
 // The pin flag: a rectangular pennant at the top of the pole, in art units.
 const POLE_HEIGHT = 138;
-const FLAG = { width: 66, height: 40, text: "WO’D" };
+const FLAG = { width: 66, height: 40 };
+// The logo mark centred on the flag, framed like the brand files (lib/logo.ts).
+const MARK = { size: 28, viewBox: "1.5 1.25 22 22" };
 
 // Confetti pieces for the hole-in-one celebration, cycling through brand colors.
 const CONFETTI_PIECES = 14;
@@ -37,7 +40,7 @@ const confettiColors = ["green", "sand", "flag", "white"];
   class="topo"
   viewBox={`0 0 ${SIZE} ${SIZE}`}
   role="img"
-  aria-label={`Contour map of a golf green with a flag reading ${FLAG.text} and a ball flight landing near the pin`}
+  aria-label="Contour map of a golf green with a green flag bearing the flag logo, and a ball flight landing near the pin"
   data-topo
   data-pin-x={pin.x}
   data-pin-y={pin.y}
@@ -111,13 +114,16 @@ const confettiColors = ["green", "sand", "flag", "white"];
           height={FLAG.height}
           rx="2"
         ></rect>
-        <text
-          class="topo__flag-text"
-          x={FLAG.width / 2}
-          y={-POLE_HEIGHT + FLAG.height / 2}
+        <svg
+          class="topo__flag-mark"
+          x={FLAG.width / 2 - MARK.size / 2}
+          y={-POLE_HEIGHT + FLAG.height / 2 - MARK.size / 2}
+          width={MARK.size}
+          height={MARK.size}
+          viewBox={MARK.viewBox}
         >
-          {FLAG.text}
-        </text>
+          <path d={LOGO_PATH} stroke-width={LOGO_STROKE_WIDTH}></path>
+        </svg>
         <g clip-path="url(#topo-cloth-clip)">
           <rect
             class="topo__fold"
@@ -468,17 +474,14 @@ const confettiColors = ["green", "sand", "flag", "white"];
   }
 
   .topo__flag {
-    fill: var(--color-flag);
+    fill: var(--color-accent);
   }
 
-  .topo__flag-text {
-    fill: #fff;
-    font-family: var(--font-display), system-ui, sans-serif;
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    text-anchor: middle;
-    dominant-baseline: central;
+  .topo__flag-mark path {
+    fill: none;
+    stroke: #fff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   /* Wind: the cloth sways from the pole, and a light band rolls across it. */

@@ -1,7 +1,7 @@
 {
-  "name": "William O'Driscoll",
-  "short_name": "W. O'Driscoll",
-  "description": "William O'Driscoll is a software engineer in St. John's, Newfoundland who designs and builds fast, modern websites for golf courses, simulators, clubs and golf brands.",
+  "name": "W. O'Design",
+  "short_name": "W. O'Design",
+  "description": "W. O'Design is William O'Driscoll, a software engineer in St. John's, Newfoundland who designs and builds fast, modern websites for golf courses, simulators, clubs and golf brands.",
   "start_url": "./",
   "scope": "./",
   "display": "browser",
