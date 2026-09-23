@@ -60,7 +60,7 @@ export const services: ReadonlyArray<{
     points: [
       "Mobile-first layout that loads fast",
       "Pages for rates, hours, lessons and events",
-      "Accessible and easy to read for every golfer",
+      "Accessible and easy to read",
     ],
   },
   {
@@ -70,7 +70,7 @@ export const services: ReadonlyArray<{
     points: [
       "Tee times, simulator bays and lessons",
       "Gift cards, memberships and pro shop products",
-      "Works with third-party booking and payment services",
+      "Works with most third-party booking and payment services",
     ],
   },
   {
