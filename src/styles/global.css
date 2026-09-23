@@ -30,9 +30,9 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-weight: 750;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: var(--line-snug);
 }
 
@@ -119,21 +119,6 @@ svg {
   white-space: nowrap;
 }
 
-/* Scroll reveal. Only hidden when JS is running, so content never disappears. */
-.js [data-reveal] {
-  opacity: 0;
-  translate: 0 18px;
-  transition:
-    opacity var(--duration-base) var(--ease-out),
-    translate var(--duration-base) var(--ease-out);
-  transition-delay: calc(var(--reveal-index, 0) * 80ms);
-}
-
-.js [data-reveal].is-visible {
-  opacity: 1;
-  translate: 0 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -145,10 +130,5 @@ svg {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  .js [data-reveal] {
-    opacity: 1;
-    translate: none;
   }
 }

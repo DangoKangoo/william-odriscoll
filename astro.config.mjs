@@ -14,10 +14,10 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.fontsource(),
-      name: "Manrope",
+      name: "Newsreader",
       cssVariable: "--font-display",
-      weights: ["500 800"],
-      fallbacks: ["sans-serif"],
+      weights: ["400 700"],
+      fallbacks: ["serif"],
     },
     {
       provider: fontProviders.fontsource(),
