@@ -57,7 +57,7 @@ This is the listing that shows on Google Maps and in the local panel for searche
 **Check eligibility first.** Google only allows businesses that meet customers in person. Online-only businesses aren't eligible and get suspended. You qualify as long as you meet clients face to face (at their course, club or shop). List only areas you actually travel to, and keep them within about 2 hours' drive of St. John's. Clients elsewhere in Canada are still welcome through the website; they just don't belong in the profile's service areas.
 
 1. Go to https://business.google.com and click **Manage now**.
-2. **Business name:** `William O'Driscoll`. Use your real business name only; Google suspends listings that stuff keywords into the name.
+2. **Business name:** `W. O'Design`, exactly as on the site, so Google sees one consistent name. Use your real business name only; Google suspends listings that stuff keywords into the name.
 3. **Category:** `Website designer`.
 4. **Do you want to add a location customers can visit?** Choose **No**, since clients don't visit you at an office. That makes you a service-area business. Google still asks for your address to verify you, but it keeps it hidden from the public.
 5. **Service areas:** `St. John's` plus nearby places you'd drive to, such as `Mount Pearl`, `Paradise` or `Conception Bay South`, all within about 2 hours. Don't add the whole province or distant cities. Google allows up to 20.

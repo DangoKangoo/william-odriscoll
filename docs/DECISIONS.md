@@ -93,7 +93,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 ## 2026-09-22: Waving flag
 
 - ~~The hero flag is about 1.5x bigger: a rectangular golf pennant in flag red with "WO’D" in bold white (Manrope, typographic apostrophe).~~ Superseded 2026-09-22, see "Rename to W. O'Design".
-- It ripples gently and never stops: the cloth sways from the pole, and a soft light band rolls across it like folds, about 2.5s per cycle. The text moves with the cloth.
+- It ripples gently and never stops: the cloth sways from the pole, and a soft light band rolls across it like folds, about 2.5s per cycle. The text moves with the cloth (now the logo mark, see "Rename to W. O'Design").
   **Why:** William asked for it. This adds a looping flag to the "subtle motion" set, which originally left one out.
 - The wind pauses with the shot loop (off screen, hidden tab) and is off under reduced motion. The hole-in-one wave plays on top.
 - Only the hero flag changes; the logo, 404 art and share card keep theirs.
@@ -112,6 +112,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - The flag mark stays the logo.
 - The hero flag is green (`--color-accent`), with the white flag logo in place of "WO’D". The size and wind are unchanged.
 - The contact section shows only the "Email me" button. The address stays on the privacy page and in the structured data.
+  **Why:** William's call for a cleaner section. Accepted tradeoff: visitors on webmail with no mail app set up won't see the address on the homepage.
 - The "next" card is the same size as the other cards and sits in the grid like them (left column today). Rows are equal height on desktop.
 - A mirrored fairway divider sits between Work and Services.
 - The repo, the URL and the GitHub Pages path stay `william-odriscoll`.
