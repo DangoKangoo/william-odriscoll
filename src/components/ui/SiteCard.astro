@@ -25,7 +25,7 @@ const year = site.launched.slice(0, 4);
       loading={index === 0 ? "eager" : "lazy"}
     />
     {site.embed.embeddable && (
-      <div class="card__live" data-live-preview data-timeout-ms="8000">
+      <div class="card__live" data-live-preview data-timeout-ms="8000" inert>
         <iframe
           src={site.url}
           title={`Live preview of ${site.name}`}
@@ -83,14 +83,26 @@ const year = site.launched.slice(0, 4);
       );
     }).observe(live);
 
-    const timeout = window.setTimeout(() => {
-      live.remove();
-      console.warn(
-        `[SiteCard] Live preview timed out, showing screenshot: ${iframe.src}`,
-      );
-    }, Number(live.dataset.timeoutMs));
+    // The iframe is lazy, so start the timeout only once the card is near the
+    // viewport. Starting it at page load could remove a preview before it loads.
+    let timeout = 0;
+    const nearView = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        nearView.disconnect();
+        timeout = window.setTimeout(() => {
+          live.remove();
+          console.warn(
+            `[SiteCard] Live preview timed out, showing screenshot: ${iframe.src}`,
+          );
+        }, Number(live.dataset.timeoutMs));
+      },
+      { rootMargin: "200px" },
+    );
+    nearView.observe(live);
 
     iframe.addEventListener("load", () => {
+      nearView.disconnect();
       window.clearTimeout(timeout);
       live.classList.add("is-loaded");
       badge.textContent = "Live preview";
