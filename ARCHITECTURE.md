@@ -9,12 +9,12 @@ src/
   config/site.ts          All page copy: hero, services, contact, nav
   content.config.ts       Schema for client site entries (build fails on bad data)
   content/sites/*.yaml    One file per client site. File name = slug
+  content/in-progress/*.json  One file per "New client site" card (title, body, order)
   assets/shots/*.jpg      Screenshot per slug (written by npm run shots)
   data/embeds.json        Per slug: can it be framed from our origin? (written by npm run shots)
   lib/
     logo.ts               The flag mark (path, stroke, brand colors)
     shots.ts              Random golf-shot geometry for the hero loop
-    work-status.ts        "Currently building / in talks" line from the work counts
     structured-data.ts    JSON-LD business schema for the homepage (from config)
     sites.ts              Joins entries + screenshots + embed checks, sorted by order
     topo.ts               Seeded contour generator for the hero art

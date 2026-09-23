@@ -84,8 +84,8 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 ## 2026-09-22: Work status and statement
 
 - The work grid shows live client sites, then one anonymous "In progress" card per real project in progress, then a "Your course could be next" card that links to Contact.
-- A status line under the Work heading reads "Currently building N site(s) · in talks with M more".
-- The in-progress count and the in-talks count (`work.inProgress` and `work.inTalks` in `config/site.ts`) drive both the cards and the line. They must stay true.
+- ~~A status line under the Work heading reads "Currently building N site(s) · in talks with M more".~~ Superseded 2026-09-22, see "In-progress entries".
+- ~~The in-progress count and the in-talks count (`work.inProgress` and `work.inTalks` in `config/site.ts`) drive both the cards and the line. They must stay true.~~ Superseded 2026-09-22, see "In-progress entries".
   **Why:** they show real momentum; placeholder cards for projects that don't exist would mislead prospects.
 - In-progress projects are never named until they launch.
 - A statement sits between Services and Contact: "This site is simple on purpose. The detail goes into yours." It's large, centered, with the flag mark above.
@@ -97,3 +97,10 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
   **Why:** William asked for it. This adds a looping flag to the "subtle motion" set, which originally left one out.
 - The wind pauses with the shot loop (off screen, hidden tab) and is off under reduced motion. The hole-in-one wave plays on top.
 - Only the hero flag changes; the logo, 404 art and share card keep theirs.
+
+## 2026-09-22: In-progress entries
+
+- Each in-progress card is one JSON file in `src/content/in-progress/` (title, body, order), validated at build time. Copy a file to add a card; delete it when the project launches.
+- Two in-progress cards, both "New client site". William's call.
+- The status line is removed, along with `work.inProgress` and `work.inTalks`.
+- When the cards before it fill whole rows, the "next" card spans the row as a shorter banner.

@@ -1,18 +1,24 @@
 ---
 // Featured sites get a full preview card. Everything else is listed below as
 // compact links, so the grid stays tidy as the catalog grows. After the live
-// sites: one card per real project in progress, then an open "next" slot.
+// sites: one card per project in progress (src/content/in-progress), then an
+// open "next" slot.
+import { getCollection } from "astro:content";
 import SiteCard from "../ui/SiteCard.astro";
 import InProgressCard from "../ui/InProgressCard.astro";
 import NextCard from "../ui/NextCard.astro";
-import { work } from "../../config/site";
 import { getSites } from "../../lib/sites";
-import { workStatusParts } from "../../lib/work-status";
 
 const sites = await getSites();
-const status = workStatusParts(work.inProgress, work.inTalks);
 const featured = sites.filter((site) => site.featured);
 const more = sites.filter((site) => !site.featured);
+const inProgress = (await getCollection("inProgress"))
+  .map((entry) => entry.data)
+  .sort((a, b) => a.order - b.order);
+
+// On the two-column grid, the next card would sit alone on its row when the
+// cards before it fill whole rows. Then it spans the row as a banner instead.
+const nextSpansRow = (featured.length + inProgress.length) % 2 === 0;
 ---
 
 <section id="work" class="section work" aria-labelledby="work-title">
@@ -24,24 +30,6 @@ const more = sites.filter((site) => !site.featured);
         Real, live sites for golf businesses across Canada. Click any live site
         to visit it.
       </p>
-      {status.length > 0 && (
-        <p class="work__status">
-          <span class="work__status-dot" aria-hidden="true"></span>
-          <span>
-            {status.map((part, i) => (
-              <span class="work__status-part">
-                {part}
-                {i < status.length - 1 && (
-                  <>
-                    <span aria-hidden="true"> · </span>
-                    <span class="visually-hidden">, </span>
-                  </>
-                )}
-              </span>
-            ))}
-          </span>
-        </p>
-      )}
     </header>
 
     <ul class="work__grid">
@@ -50,16 +38,17 @@ const more = sites.filter((site) => !site.featured);
           <SiteCard site={site} index={index} />
         </li>
       ))}
-      {Array.from({ length: work.inProgress }, (_, i) => (
+      {inProgress.map((project, i) => (
         <li data-reveal style={`--reveal-index: ${featured.length + i}`}>
-          <InProgressCard />
+          <InProgressCard title={project.title} body={project.body} />
         </li>
       ))}
       <li
+        class:list={{ "work__next--wide": nextSpansRow }}
         data-reveal
-        style={`--reveal-index: ${featured.length + work.inProgress}`}
+        style={`--reveal-index: ${featured.length + inProgress.length}`}
       >
-        <NextCard />
+        <NextCard wide={nextSpansRow} />
       </li>
     </ul>
 
@@ -99,35 +88,13 @@ const more = sites.filter((site) => !site.featured);
     display: grid;
   }
 
-  .work__status {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    justify-self: start;
-    margin-top: var(--space-2);
-    padding: 0.35rem 0.9rem;
-    border-radius: var(--radius-md);
-    background: var(--color-accent-soft);
-    color: var(--color-accent-strong);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-  }
-
-  /* Each part stays whole, so a wrap breaks after the dot. */
-  .work__status-part {
-    white-space: nowrap;
-  }
-
-  .work__status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-accent);
-  }
-
   @media (min-width: 60rem) {
     .work__grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    .work__next--wide {
+      grid-column: 1 / -1;
     }
   }
 
