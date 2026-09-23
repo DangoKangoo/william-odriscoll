@@ -1,14 +1,14 @@
 {
   "dormston": {
-    "embeddable": false,
-    "reason": "frame-ancestors: 'self' https://williamodriscoll.dev https://www.williamodriscoll.dev https://william-odriscoll.vercel.app https://willod.onrender.com http://localhost:3000 http://localhost:3001 http://127.0.0.1:3000 http://127.0.0.1:3001",
+    "embeddable": true,
+    "reason": "frame-ancestors allows https://dangokangoo.github.io",
     "checkedFor": "https://dangokangoo.github.io",
-    "checkedAt": "2026-09-22T17:21:01.191Z"
+    "checkedAt": "2026-09-23T12:05:56.061Z"
   },
   "twin-arrows": {
-    "embeddable": false,
-    "reason": "frame-ancestors: 'self' http://localhost:3000 http://localhost:3001 http://127.0.0.1:3000 http://127.0.0.1:3001 https://william-odriscoll.vercel.app https://williamodriscoll.dev https://www.williamodriscoll.dev",
+    "embeddable": true,
+    "reason": "frame-ancestors allows https://dangokangoo.github.io",
     "checkedFor": "https://dangokangoo.github.io",
-    "checkedAt": "2026-09-22T17:21:04.597Z"
+    "checkedAt": "2026-09-23T12:05:59.719Z"
   }
 }
