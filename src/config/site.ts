@@ -51,47 +51,26 @@ export const services: ReadonlyArray<{
   icon: ServiceIcon;
   title: string;
   body: string;
-  points: ReadonlyArray<string>;
 }> = [
   {
     icon: "tee",
     title: "Design and build",
-    body: "A custom site built around your course or venue, not a template.",
-    points: [
-      "Mobile-first layout that loads fast",
-      "Pages for rates, hours, lessons and events",
-      "Accessible and easy to read",
-    ],
+    body: "A custom site built around your course or brand, not a template. Fast on every phone, easy to read, easy to update.",
   },
   {
     icon: "calendar",
     title: "Booking and stores",
-    body: "Customers book and pay online, any time of day.",
-    points: [
-      "Tee times, simulator bays and lessons",
-      "Gift cards, memberships and pro shop products",
-      "Works with most third-party booking and payment services",
-    ],
+    body: "Tee times, simulator bays, lessons or products. I connect most booking and payment services you already use, so customers can pay and book online.",
   },
   {
     icon: "pin",
     title: "Local search",
-    body: "Golfers nearby find you before they find anyone else.",
-    points: [
-      "Business listing setup for search and maps",
-      "Structured data for your hours, location and contact details",
-      "Page titles that match what golfers actually search",
-    ],
+    body: "Structured data, business listing guidance and clean page titles, so golfers nearby find you first.",
   },
   {
     icon: "flag",
     title: "Hosting and care",
-    body: "One person looking after your site all season.",
-    points: [
-      "Hosting, deploys and monitoring",
-      "Opening day, season hours and events updated on request",
-      "Message me directly, no ticket queue",
-    ],
+    body: "I deploy, monitor and keep your site current. Need a new menu, event or season's hours? Send a message and it's done.",
   },
 ];
 
