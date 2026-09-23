@@ -79,7 +79,7 @@ export const services: ReadonlyArray<{
     body: "Golfers nearby find you before they find anyone else.",
     points: [
       "Google Business Profile setup and guidance",
-      "Structured data for your hours, location and rates",
+      "Structured data for your hours, location and contact details",
       "Page titles that match what golfers actually search",
     ],
   },

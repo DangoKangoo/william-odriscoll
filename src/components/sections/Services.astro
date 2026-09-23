@@ -12,7 +12,7 @@ import { services } from "../../config/site";
       </h2>
     </header>
 
-    <ul class="services">
+    <ul class="services" role="list">
       {services.map((service, index) => (
         <li class="service" data-reveal style={`--reveal-index: ${index}`}>
           <span class="service__icon">
@@ -20,7 +20,7 @@ import { services } from "../../config/site";
           </span>
           <h3>{service.title}</h3>
           <p>{service.body}</p>
-          <ul class="service__points">
+          <ul class="service__points" role="list">
             {service.points.map((point) => (
               <li>{point}</li>
             ))}
