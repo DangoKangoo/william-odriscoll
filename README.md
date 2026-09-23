@@ -1,6 +1,6 @@
 # william-odriscoll
 
-Portfolio site for William O'Driscoll, websites for golf businesses. Built with Astro and deployed to GitHub Pages.
+Portfolio site for W. O'Design (William O'Driscoll), websites for golf businesses. Built with Astro and deployed to GitHub Pages.
 
 Live: https://dangokangoo.github.io/william-odriscoll/
 

@@ -54,7 +54,7 @@ export function businessSchema(
     ],
     founder: {
       "@type": "Person",
-      name: site.name,
+      name: site.founder,
       jobTitle: site.jobTitle,
       sameAs: [site.linkedin],
     },

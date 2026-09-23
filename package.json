@@ -1,7 +1,7 @@
 {
   "name": "william-odriscoll",
   "version": "1.0.0",
-  "description": "Portfolio site for William O'Driscoll, websites for golf businesses.",
+  "description": "Portfolio site for W. O'Design (William O'Driscoll), websites for golf businesses.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
