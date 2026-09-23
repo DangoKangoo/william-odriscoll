@@ -124,8 +124,8 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 ## 2026-09-23: Services copy
 
-- Services keeps its 4 cards, icons, heading and layout. Each card has a one-line intro plus 3 deliverable bullets (`points` in `config/site.ts`).
-- Plain golf operations language (tee times, season hours, pro shop), no puns.
+- ~~Services keeps its 4 cards, icons, heading and layout. Each card has a one-line intro plus 3 deliverable bullets (`points` in `config/site.ts`).~~ Superseded 2026-09-23, see "Services revert".
+- ~~Plain golf operations language (tee times, season hours, pro shop), no puns.~~ Superseded 2026-09-23, see "Services revert".
 - No client names or links in Services.
   **Why:** William's call. That would repeat the Work section.
 - The copy never claims clients edit their own site. Changes go through William.
@@ -134,4 +134,10 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 - No brand names in Services copy (no Acuity, Square or Google Business Profile). Describe the ability, e.g. "third-party booking and payment services".
   **Why:** William's call. Brand names read as name-dropping.
-- Design and build bullets list concrete abilities: mobile-first and fast, pages for rates, hours, lessons and events, and accessible and easy to read.
+- ~~Design and build bullets list concrete abilities: mobile-first and fast, pages for rates, hours, lessons and events, and accessible and easy to read.~~ Superseded 2026-09-23, see "Services revert".
+
+## 2026-09-23: Services revert
+
+- Services is back to the original layout and copy (before 2026-09-23): 4 cards, an icon and one paragraph each, no bullets.
+  **Why:** William preferred the original.
+- The only change from the original: brand names are replaced with plain wording ("booking and payment services", "business listing guidance"), following "Services wording".
