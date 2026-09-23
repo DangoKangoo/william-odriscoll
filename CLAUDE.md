@@ -20,7 +20,7 @@ Portfolio site for **W. O'Design**, William O'Driscoll's web studio for golf bus
 
   A new portfolio domain must be added to both before re-running `npm run shots`.
 
-- **In-progress cards:** one JSON file each in `src/content/in-progress/`. Never name a client project before it launches.
+- **In progress:** a count, `work.inProgress` in `src/config/site.ts`, shown as one line under the client sites. Keep it true. Never name a client project before it launches.
 - **Search Console:** the verification code goes in `site.googleSiteVerification` once William sends it. There's no robots.txt, because github.io only reads it at the domain root.
 - **Lighthouse:** `npm run lighthouse` fails locally on Windows (chrome-launcher EPERM). It runs in CI.
 - **Skills:** the global gitignore excludes `.claude/`, so skill files need `git add -f .claude/skills/<name>/SKILL.md`. Never add the whole folder.

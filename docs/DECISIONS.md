@@ -10,12 +10,12 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Hosting: GitHub Pages, deployed by GitHub Actions on every merge to `main`.
 - Repo: public `DangoKangoo/william-odriscoll`, served at `dangokangoo.github.io/william-odriscoll`. Custom domain later.
 - One page, four sections: Hero, Work, Services, Contact.
-- Visual direction: light, off-white background, deep golf-green accent, Manrope (display) + Inter (body).
+- ~~Visual direction: light, off-white background, deep golf-green accent, Manrope (display) + Inter (body).~~ Superseded 2026-09-23, see "Less template, more person".
 - Hero art: generated topographic contour map of a green, with a flag and ~~a ball flight that draws itself once~~ looping shots (see "Hero shot loop").
 - ~~Motion: subtle. Scroll fade-ups, card hover lift, one-time ball-flight draw. Everything is off under `prefers-reduced-motion`.~~ Superseded 2026-09-22, see "Hero shot loop".
-- Extras: service icons, dimple texture on Contact, one fairway divider under the hero.
+- ~~Extras: service icons, dimple texture on Contact, one fairway divider under the hero.~~ Superseded 2026-09-23, see "Less template, more person".
   **Why:** the stats strip was skipped until there are enough sites (5+) for the numbers to impress.
-- Showcase: a live iframe in a browser frame when the site allows framing from this origin, otherwise a screenshot. A badge always says which is showing.
+- ~~Showcase: a live iframe in a browser frame when the site allows framing from this origin, otherwise a screenshot. A badge always says which is showing.~~ Superseded 2026-09-23, see "Less template, more person".
   **Why:** cross-origin iframes cannot reliably report a CSP block, so `npm run shots` checks the headers ahead of time and saves the result to `src/data/embeds.json`.
 - Screenshots: `npm run shots` (Playwright), committed to `src/assets/shots/`. The build fails if a site is missing one.
 - Site entry fields: name, url, description, location, tags, launched (YYYY-MM), featured, order.
@@ -29,7 +29,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 ## 2026-09-22: Hero shot loop
 
-- Motion: subtle. Scroll fade-ups, card hover lift, and a looping hero shot. Everything is off under `prefers-reduced-motion`.
+- ~~Motion: subtle. Scroll fade-ups, card hover lift, and a looping hero shot. Everything is off under `prefers-reduced-motion`.~~ Superseded 2026-09-23, see "Less template, more person".
 - Hero shots loop one at a time, and each shot is new and random: it starts somewhere along the left side of the art, flies a random arc height, and lands on the green around the pin.
 - Each shot: the trail draws as the ball flies (about 1.6s), the ball rolls a short way toward the pin, holds, then the ball and trail fade together before the next shot. About 4s per shot.
 - ~~Every shot lands on the green. No misses, no hole-in-one.~~ Superseded 2026-09-22, see "Hole in one".
@@ -83,12 +83,12 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 ## 2026-09-22: Work status and statement
 
-- The work grid shows live client sites, then one anonymous "In progress" card per real project in progress, then a "Your course could be next" card that links to Contact.
+- ~~The work grid shows live client sites, then one anonymous "In progress" card per real project in progress, then a "Your course could be next" card that links to Contact.~~ Superseded 2026-09-23, see "Less template, more person".
 - ~~A status line under the Work heading reads "Currently building N site(s) · in talks with M more".~~ Superseded 2026-09-22, see "In-progress entries".
 - ~~The in-progress count and the in-talks count (`work.inProgress` and `work.inTalks` in `config/site.ts`) drive both the cards and the line. They must stay true.~~ Superseded 2026-09-22, see "In-progress entries".
   **Why:** they show real momentum; placeholder cards for projects that don't exist would mislead prospects.
 - In-progress projects are never named until they launch.
-- A statement sits between Services and Contact: "This site is simple on purpose. The detail goes into yours." It's large, centered, with the flag mark above.
+- ~~A statement sits between Services and Contact: "This site is simple on purpose. The detail goes into yours." It's large, centered, with the flag mark above.~~ Superseded 2026-09-23, see "Less template, more person".
 
 ## 2026-09-22: Waving flag
 
@@ -100,9 +100,9 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 ## 2026-09-22: In-progress entries
 
-- Each in-progress card is one JSON file in `src/content/in-progress/` (title, body, order), validated at build time. Copy a file to add a card; delete it when the project launches.
-- Two in-progress cards, both "New client site". William's call.
-- The status line is removed, along with `work.inProgress` and `work.inTalks`.
+- ~~Each in-progress card is one JSON file in `src/content/in-progress/` (title, body, order), validated at build time. Copy a file to add a card; delete it when the project launches.~~ Superseded 2026-09-23, see "Less template, more person".
+- ~~Two in-progress cards, both "New client site". William's call.~~ Superseded 2026-09-23, see "Less template, more person".
+- ~~The status line is removed, along with `work.inProgress` and `work.inTalks`.~~ Superseded 2026-09-23, see "Less template, more person".
 - ~~When the cards before it fill whole rows, the "next" card spans the row as a shorter banner.~~ Superseded 2026-09-22, see "Rename to W. O'Design".
 
 ## 2026-09-22: Rename to W. O'Design
@@ -111,9 +111,9 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - William O'Driscoll (`site.founder`) appears in the footer ("© 2026 W. O'Design · William O'Driscoll"), in the site description, and as the founder in the structured data.
 - The flag mark stays the logo.
 - The hero flag is green (`--color-accent`), with the white flag logo in place of "WO’D". The size and wind are unchanged.
-- The contact section shows only the "Email me" button. The address stays on the privacy page and in the structured data.
+- ~~The contact section shows only the "Email me" button. The address stays on the privacy page and in the structured data.~~ Superseded 2026-09-23, see "Less template, more person".
   **Why:** William's call for a cleaner section. Accepted tradeoff: visitors on webmail with no mail app set up won't see the address on the homepage.
-- The "next" card is the same size as the other cards and sits in the grid like them (left column today). Rows are equal height on desktop.
+- ~~The "next" card is the same size as the other cards and sits in the grid like them (left column today). Rows are equal height on desktop.~~ Superseded 2026-09-23, see "Less template, more person".
 - A mirrored fairway divider sits between Work and Services.
 - The repo, the URL and the GitHub Pages path stay `william-odriscoll`.
 
@@ -138,9 +138,30 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 ## 2026-09-23: Services revert
 
-- Services is back to the original layout and copy (before 2026-09-23): 4 cards, an icon and one paragraph each, no bullets.
+- ~~Services is back to the original layout and copy (before 2026-09-23): 4 cards, an icon and one paragraph each, no bullets.~~ Superseded 2026-09-23, see "Less template, more person".
   **Why:** William preferred the original.
 - ~~The only change from the original: brand names are replaced with plain wording ("booking and payment services", "business listing guidance"), following "Services wording".~~ Superseded 2026-09-23, see the booking card line below.
 - The original "easy to update" line stays as is.
 - Changes from the original: brand names are replaced with plain wording. Local search says "business listing guidance". The booking card says "I set up third-party integrations so customers can pay and book online."
   **Why:** William's call, replacing "I connect most booking and payment services you already use, so customers can pay and book online."
+
+## 2026-09-23: Less template, more person
+
+- ~~Hero: no label above the headline. "Hi, I'm Will O'Driscoll." then "I build websites for golf courses, simulators and shops", then a lead that names the real work (Dormston's online bay booking, Twin Arrows' stick builder). Buttons: "See the work" and "Get in touch".~~ Superseded 2026-09-23, see the hero lead line below.
+  **Why:** the "Software engineer · St. John's, NL" label and adjective copy read as AI-generated. A name and real proof read as a person.
+- No photo yet. When William has a headshot, it goes next to the hello line. No placeholder image.
+- No small caps section labels, except the "404" on the 404 page. Section headings have no trailing periods.
+- Golf puns only on the 404 page.
+- Work: heading "Sites I've built". Each featured site is a full-width row, preview on one side and details on the other, alternating sides on desktop.
+- Projects in progress are one line under the sites, from a count (`work.inProgress` in `config/site.ts`), then a "Want yours to be next? Get in touch." link. No cards, never named, and 0 hides the count. It must stay true.
+- The "next" card and the "simple on purpose" statement are removed. No client quote until a client gives a real one in writing.
+- The live preview vs screenshot logic is unchanged, but no badge says which one is showing. Iframes use `scrolling="no"` so the client site's scrollbar doesn't show.
+- Services: heading "What I do", then a plain two-column list (title and paragraph, no icons, no cards). The copy is unchanged.
+- Contact: "Got a project in mind?", the "Email me" button, and the address visible under it ("or write to ...").
+  **Why:** mailto does nothing for webmail users with no mail app.
+- Display font: Newsreader (serif) replaces Manrope. Inter stays for body text.
+  **Why:** a serif fits golf's scorecard and yardage-book heritage and moves away from the default "modern template" look.
+- Motion: only the hero shot loop and the waving flag. No scroll reveals, card lifts or button and arrow nudges.
+- Open: the share image (`npm run brand`) still uses Manrope.
+- Hero: no label above the headline. "Hi, I'm Will O'Driscoll." then "I build websites for golf courses, simulators and shops", then "I'm a software engineer in St. John's. I design, build and look after every site myself, including online booking, stores and local search." Buttons: "See the work" and "Get in touch".
+  **Why:** William's call. Naming clients in the intro read as small and unprofessional. The Work section shows them.

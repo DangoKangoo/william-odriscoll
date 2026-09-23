@@ -1,15 +1,14 @@
 # Architecture
 
-A single static page built by Astro. There is no server, database or client framework; the only JavaScript runs the scroll reveals and the live-preview loader.
+A single static page built by Astro. There is no server, database or client framework; the only JavaScript runs the hero shot loop and the live-preview loader.
 
 ## Layout
 
 ```
 src/
-  config/site.ts          All page copy: hero, services, contact, nav
+  config/site.ts          All page copy: hero, services, contact, nav, in-progress count
   content.config.ts       Schema for client site entries (build fails on bad data)
   content/sites/*.yaml    One file per client site. File name = slug
-  content/in-progress/*.json  One file per "New client site" card (title, body, order)
   assets/shots/*.jpg      Screenshot per slug (written by npm run shots)
   data/embeds.json        Per slug: can it be framed from our origin? (written by npm run shots)
   lib/
@@ -21,10 +20,10 @@ src/
     url.ts                withBase() for base-path aware URLs
   components/
     layout/               Header, Footer
-    sections/             Hero, Work, Services, Statement, Contact (one per page section)
-    ui/                   Button, BrowserFrame, SiteCard, InProgressCard, NextCard
-    art/                  TopoGreen, OutOfBounds, Logo, Icon, FairwayDivider (inline SVG)
-  layouts/Base.astro      <head>, SEO and OG tags, fonts, reveal script
+    sections/             Hero, Work, Services, Contact (one per page section)
+    ui/                   Button, BrowserFrame, SiteCard
+    art/                  TopoGreen, OutOfBounds, Logo, FairwayDivider (inline SVG)
+  layouts/Base.astro      <head>, SEO and OG tags, fonts
   pages/index.astro       Composes the sections
   pages/privacy.astro     Privacy note (copy lives in the page)
   pages/404.astro         Not-found page, served by GitHub Pages for any missing URL
@@ -53,7 +52,7 @@ data/embeds.json[<slug>] ──┘
 
 1. The screenshot always renders, as an optimized responsive WebP.
 2. If `embeds.json` says the site allows framing from `SITE_URL`, a lazy, sandboxed 1280x800 iframe is layered on top and scaled to fit.
-3. The badge reads "Screenshot" until the iframe fires `load`, then "Live preview". If the iframe hasn't loaded after 8s, it's removed and a warning is logged.
+3. The iframe fades in when it fires `load`. If it hasn't loaded after 8s, it's removed and a warning is logged. No badge says which one is showing.
 
 ## Configuration
 

@@ -44,21 +44,11 @@ The build fails with a clear message if a field is wrong or the screenshot is mi
 
 ### Work in progress
 
-Each "New client site" card in the work section is one JSON file in `src/content/in-progress/`:
-
-```json
-{
-  "title": "New client site",
-  "body": "Design and build under way. It'll show up here when it launches.",
-  "order": 2
-}
-```
-
-To add a card, copy a file (e.g. `project-3.json`) and bump `order`. When the project launches, delete its file and add the live site's YAML entry. The build fails if a field is missing.
+Under the client sites, one line counts the projects in progress ("2 more sites are in progress..."). The count is `work.inProgress` in `src/config/site.ts`. Keep it true: raise it when a project starts, lower it when one launches (and add the live site's YAML entry). `0` hides the line. Projects in progress are never named.
 
 ### Live previews
 
-A card shows a live iframe only when the client site allows framing from this site's origin. To allow it, add `https://dangokangoo.github.io` to that site's `Content-Security-Policy: frame-ancestors`, then re-run `npm run shots`.
+A site shows a live iframe only when the client site allows framing from this site's origin. To allow it, add `https://dangokangoo.github.io` to that site's `Content-Security-Policy: frame-ancestors`, then re-run `npm run shots`.
 
 ## Workflow
 
