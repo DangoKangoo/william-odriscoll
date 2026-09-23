@@ -140,6 +140,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 - Services is back to the original layout and copy (before 2026-09-23): 4 cards, an icon and one paragraph each, no bullets.
   **Why:** William preferred the original.
-- The only change from the original: brand names are replaced with plain wording ("booking and payment services", "business listing guidance"), following "Services wording".
+- ~~The only change from the original: brand names are replaced with plain wording ("booking and payment services", "business listing guidance"), following "Services wording".~~ Superseded 2026-09-23, see the booking card line below.
 - The original "easy to update" line stays as is.
-- Booking card wording: "Third-party integrations let customers pay and book online." William's call, replacing "most booking and payment services".
+- Changes from the original: brand names are replaced with plain wording. Local search says "business listing guidance". The booking card says "I set up third-party integrations so customers can pay and book online."
+  **Why:** William's call, replacing "I connect most booking and payment services you already use, so customers can pay and book online."
