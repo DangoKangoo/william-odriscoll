@@ -44,9 +44,12 @@ const { wide = false } = Astro.props;
       background-color var(--duration-fast) ease;
   }
 
-  .next--wide {
-    min-height: 0;
-    padding-block: var(--space-7);
+  /* Only on the two-column grid, where it spans the row. */
+  @media (min-width: 60rem) {
+    .next--wide {
+      min-height: 0;
+      padding-block: var(--space-7);
+    }
   }
 
   .next:hover {
