@@ -15,10 +15,6 @@ const more = sites.filter((site) => !site.featured);
 const inProgress = (await getCollection("inProgress"))
   .map((entry) => entry.data)
   .sort((a, b) => a.order - b.order);
-
-// On the two-column grid, the next card would sit alone on its row when the
-// cards before it fill whole rows. Then it spans the row as a banner instead.
-const nextSpansRow = (featured.length + inProgress.length) % 2 === 0;
 ---
 
 <section id="work" class="section work" aria-labelledby="work-title">
@@ -44,11 +40,10 @@ const nextSpansRow = (featured.length + inProgress.length) % 2 === 0;
         </li>
       ))}
       <li
-        class:list={{ "work__next--wide": nextSpansRow }}
         data-reveal
         style={`--reveal-index: ${featured.length + inProgress.length}`}
       >
-        <NextCard wide={nextSpansRow} />
+        <NextCard />
       </li>
     </ul>
 
@@ -89,12 +84,10 @@ const nextSpansRow = (featured.length + inProgress.length) % 2 === 0;
   }
 
   @media (min-width: 60rem) {
+    /* Equal rows, so a card alone on the last row matches the others. */
     .work__grid {
       grid-template-columns: repeat(2, 1fr);
-    }
-
-    .work__next--wide {
-      grid-column: 1 / -1;
+      grid-auto-rows: 1fr;
     }
   }
 

@@ -11,9 +11,6 @@ import { contact, site } from "../../config/site";
     <Button href={`mailto:${site.email}`} variant="light">
       Email me
     </Button>
-    <a class="contact__email" href={`mailto:${site.email}`}>
-      {site.email}
-    </a>
   </div>
 </section>
 
@@ -70,11 +67,5 @@ import { contact, site } from "../../config/site";
   .contact__body {
     color: var(--color-on-accent-muted);
     font-size: var(--font-size-lg);
-  }
-
-  .contact__email {
-    color: var(--color-on-accent);
-    font-size: var(--font-size-sm);
-    text-underline-offset: 4px;
   }
 </style>
