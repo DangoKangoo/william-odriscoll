@@ -128,7 +128,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - ~~Plain golf operations language (tee times, season hours, pro shop), no puns.~~ Superseded 2026-09-23, see "Services revert".
 - No client names or links in Services.
   **Why:** William's call. That would repeat the Work section.
-- The copy never claims clients edit their own site. Changes go through William.
+- ~~The copy never claims clients edit their own site. Changes go through William.~~ Superseded 2026-09-23, see "Services revert".
 
 ## 2026-09-23: Services wording
 
@@ -141,3 +141,4 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Services is back to the original layout and copy (before 2026-09-23): 4 cards, an icon and one paragraph each, no bullets.
   **Why:** William preferred the original.
 - The only change from the original: brand names are replaced with plain wording ("booking and payment services", "business listing guidance"), following "Services wording".
+- The original "easy to update" line stays as is.
