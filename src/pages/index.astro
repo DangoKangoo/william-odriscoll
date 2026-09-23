@@ -4,7 +4,6 @@ import FairwayDivider from "../components/art/FairwayDivider.astro";
 import Hero from "../components/sections/Hero.astro";
 import Work from "../components/sections/Work.astro";
 import Services from "../components/sections/Services.astro";
-import Statement from "../components/sections/Statement.astro";
 import Contact from "../components/sections/Contact.astro";
 import { site } from "../config/site";
 import { businessSchema } from "../lib/structured-data";
@@ -28,6 +27,5 @@ const schema = businessSchema(absolute("/"), absolute);
     mirror
   />
   <Services />
-  <Statement />
   <Contact />
 </Base>

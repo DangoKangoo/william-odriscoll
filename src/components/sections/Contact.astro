@@ -4,13 +4,15 @@ import { contact, site } from "../../config/site";
 ---
 
 <section id="contact" class="section contact" aria-labelledby="contact-title">
-  <div class="container contact__inner" data-reveal>
-    <p class="eyebrow">Contact</p>
+  <div class="container contact__inner">
     <h2 id="contact-title">{contact.title}</h2>
     <p class="contact__body">{contact.body}</p>
     <Button href={`mailto:${site.email}`} variant="light">
       Email me
     </Button>
+    <p class="contact__address">
+      or write to <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
   </div>
 </section>
 
@@ -56,10 +58,6 @@ import { contact, site } from "../../config/site";
     max-width: 42rem;
   }
 
-  .eyebrow {
-    color: var(--color-on-accent-muted);
-  }
-
   h2 {
     font-size: var(--font-size-xl);
   }
@@ -67,5 +65,15 @@ import { contact, site } from "../../config/site";
   .contact__body {
     color: var(--color-on-accent-muted);
     font-size: var(--font-size-lg);
+  }
+
+  .contact__address {
+    color: var(--color-on-accent-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .contact__address a {
+    color: var(--color-on-accent);
+    text-underline-offset: 0.2em;
   }
 </style>

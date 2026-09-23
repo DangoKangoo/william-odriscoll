@@ -70,10 +70,6 @@ const ogImage = new URL(withBase("og.png"), Astro.site);
 
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-body" preload />
-
-    <script is:inline>
-      document.documentElement.classList.add("js");
-    </script>
   </head>
   <body id="top">
     <Header />
@@ -81,22 +77,5 @@ const ogImage = new URL(withBase("og.png"), Astro.site);
       <slot />
     </main>
     <Footer />
-
-    <script>
-      // Reveal [data-reveal] elements as they scroll into view.
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        },
-        { rootMargin: "0px 0px -10% 0px" },
-      );
-      document
-        .querySelectorAll("[data-reveal]")
-        .forEach((el) => observer.observe(el));
-    </script>
   </body>
 </html>

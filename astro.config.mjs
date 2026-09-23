@@ -14,16 +14,18 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.fontsource(),
-      name: "Manrope",
+      name: "Newsreader",
       cssVariable: "--font-display",
-      weights: ["500 800"],
-      fallbacks: ["sans-serif"],
+      weights: ["400 700"],
+      styles: ["normal"],
+      fallbacks: ["serif"],
     },
     {
       provider: fontProviders.fontsource(),
       name: "Inter",
       cssVariable: "--font-body",
       weights: ["400 600"],
+      styles: ["normal"],
       fallbacks: ["sans-serif"],
     },
   ],
