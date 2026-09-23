@@ -60,7 +60,7 @@ export const services: ReadonlyArray<{
   {
     icon: "calendar",
     title: "Booking and stores",
-    body: "Tee times, simulator bays, lessons or products. I connect most booking and payment services you already use, so customers can pay and book online.",
+    body: "Tee times, simulator bays, lessons or products. I set up third-party integrations so customers can pay and book online.",
   },
   {
     icon: "pin",
