@@ -142,3 +142,4 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
   **Why:** William preferred the original.
 - The only change from the original: brand names are replaced with plain wording ("booking and payment services", "business listing guidance"), following "Services wording".
 - The original "easy to update" line stays as is.
+- Booking card wording: "Third-party integrations let customers pay and book online." William's call, replacing "most booking and payment services".
