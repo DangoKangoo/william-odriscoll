@@ -1,19 +1,12 @@
 ---
-// Browser-window chrome around a site preview. The slot is the viewport.
-// Pass `url` for a real site (its host shows in the address bar), or
-// `address` for a label. `badge` is the corner tag (e.g. "Screenshot"). It's
-// hidden from screen readers: the image alt or card text already says it.
+// Browser-window chrome around a site preview. The slot is the viewport, and
+// the site's host shows in the address bar.
 interface Props {
-  url?: string;
-  address?: string;
-  badge?: string;
+  url: string;
 }
 
-const { url, address, badge } = Astro.props;
-if (!url && !address) {
-  throw new Error("[BrowserFrame] Pass either url or address.");
-}
-const label = address ?? new URL(url!).host.replace(/^www\./, "");
+const { url } = Astro.props;
+const label = new URL(url).host.replace(/^www\./, "");
 ---
 
 <div class="frame">
@@ -27,11 +20,6 @@ const label = address ?? new URL(url!).host.replace(/^www\./, "");
   </div>
   <div class="frame__viewport">
     <slot />
-    {badge && (
-      <span class="frame__badge" data-badge aria-hidden="true">
-        {badge}
-      </span>
-    )}
   </div>
 </div>
 
@@ -78,19 +66,5 @@ const label = address ?? new URL(url!).host.replace(/^www\./, "");
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background: var(--color-bg);
-  }
-
-  .frame__badge {
-    position: absolute;
-    right: var(--space-3);
-    bottom: var(--space-3);
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-pill);
-    background: rgb(16 35 26 / 78%);
-    color: var(--color-on-accent);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    backdrop-filter: blur(6px);
   }
 </style>

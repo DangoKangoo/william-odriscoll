@@ -1,54 +1,34 @@
 ---
-// Featured sites get a full preview card. Everything else is listed below as
-// compact links, so the grid stays tidy as the catalog grows. After the live
-// sites: one card per project in progress (src/content/in-progress), then an
-// open "next" slot.
-import { getCollection } from "astro:content";
+// Featured sites get a full-width feature row, alternating sides. Everything
+// else is listed below as compact links. Then one line for the projects in
+// progress (a count, never names) and a link to Contact.
 import SiteCard from "../ui/SiteCard.astro";
-import InProgressCard from "../ui/InProgressCard.astro";
-import NextCard from "../ui/NextCard.astro";
 import { getSites } from "../../lib/sites";
+import { work } from "../../config/site";
 
 const sites = await getSites();
 const featured = sites.filter((site) => site.featured);
 const more = sites.filter((site) => !site.featured);
-const inProgress = (await getCollection("inProgress"))
-  .map((entry) => entry.data)
-  .sort((a, b) => a.order - b.order);
+const inProgressLine =
+  work.inProgress === 1
+    ? "1 more site is in progress. It'll show up here when it launches."
+    : `${work.inProgress} more sites are in progress. They'll show up here when they launch.`;
 ---
 
 <section id="work" class="section work" aria-labelledby="work-title">
   <div class="container">
-    <header class="section-head" data-reveal>
-      <p class="eyebrow">Selected work</p>
-      <h2 id="work-title">Sites built for the game.</h2>
-      <p>
-        Real, live sites for golf businesses across Canada. Click any live site
-        to visit it.
-      </p>
-    </header>
+    <h2 id="work-title">Sites I've built</h2>
 
-    <ul class="work__grid">
+    <ul class="work__list">
       {featured.map((site, index) => (
-        <li data-reveal style={`--reveal-index: ${index}`}>
+        <li>
           <SiteCard site={site} index={index} />
         </li>
       ))}
-      {inProgress.map((project, i) => (
-        <li data-reveal style={`--reveal-index: ${featured.length + i}`}>
-          <InProgressCard title={project.title} body={project.body} />
-        </li>
-      ))}
-      <li
-        data-reveal
-        style={`--reveal-index: ${featured.length + inProgress.length}`}
-      >
-        <NextCard />
-      </li>
     </ul>
 
     {more.length > 0 && (
-      <div class="work__more" data-reveal>
+      <div class="work__more">
         <h3>More work</h3>
         <ul>
           {more.map((site) => (
@@ -62,6 +42,11 @@ const inProgress = (await getCollection("inProgress"))
         </ul>
       </div>
     )}
+
+    <p class="work__next">
+      {work.inProgress > 0 && <span>{inProgressLine}</span>}
+      <a href={work.nextCta.href}>{work.nextCta.label}</a>
+    </p>
   </div>
 </section>
 
@@ -71,28 +56,27 @@ const inProgress = (await getCollection("inProgress"))
     background: var(--color-surface);
   }
 
-  .work__grid {
+  h2 {
+    margin-bottom: var(--space-7);
+    font-size: var(--font-size-xl);
+  }
+
+  .work__list {
     display: grid;
-    gap: var(--space-6);
+    gap: var(--space-8);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .work__grid > li {
-    display: grid;
-  }
-
   @media (min-width: 60rem) {
-    /* Equal rows, so a card alone on the last row matches the others. */
-    .work__grid {
-      grid-template-columns: repeat(2, 1fr);
-      grid-auto-rows: 1fr;
+    .work__list {
+      gap: var(--space-9);
     }
   }
 
   .work__more {
-    margin-top: var(--space-7);
+    margin-top: var(--space-8);
   }
 
   .work__more h3 {
@@ -118,5 +102,21 @@ const inProgress = (await getCollection("inProgress"))
   .work__more span {
     color: var(--color-muted);
     font-size: var(--font-size-sm);
+  }
+
+  .work__next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-muted);
+  }
+
+  .work__next a {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-underline-offset: 0.2em;
   }
 </style>

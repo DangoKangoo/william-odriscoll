@@ -1,6 +1,7 @@
 ---
-// One client site: a live iframe preview when the site allows framing from this
-// origin, otherwise its screenshot. The badge always says which one is showing.
+// One client site as a feature row: the preview on one side, the details on
+// the other. Odd rows flip sides on desktop. The preview is a live iframe when
+// the site allows framing from this origin, otherwise its screenshot.
 import { Image } from "astro:assets";
 import BrowserFrame from "./BrowserFrame.astro";
 import type { Site } from "../../lib/sites";
@@ -14,48 +15,56 @@ const { site, index } = Astro.props;
 const year = site.launched.slice(0, 4);
 ---
 
-<article class="card">
-  <BrowserFrame url={site.url} badge="Screenshot">
-    <Image
-      class="card__shot"
-      src={site.screenshot}
-      alt={`Screenshot of the ${site.name} website`}
-      widths={[480, 720, 960, 1280]}
-      sizes="(min-width: 60rem) 34rem, 92vw"
-      loading={index === 0 ? "eager" : "lazy"}
-    />
-    {site.embed.embeddable && (
-      <div class="card__live" data-live-preview data-timeout-ms="8000" inert>
-        <iframe
-          src={site.url}
-          title={`Live preview of ${site.name}`}
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin"
-          referrerpolicy="no-referrer"
-          tabindex="-1"
-          aria-hidden="true"
-        ></iframe>
-      </div>
-    )}
-  </BrowserFrame>
+<article class:list={["project", { "project--flip": index % 2 === 1 }]}>
+  <div class="project__preview">
+    <BrowserFrame url={site.url}>
+      <Image
+        class="project__shot"
+        src={site.screenshot}
+        alt={`Screenshot of the ${site.name} website`}
+        widths={[480, 720, 960, 1280]}
+        sizes="(min-width: 60rem) 42rem, 92vw"
+        loading={index === 0 ? "eager" : "lazy"}
+      />
+      {site.embed.embeddable && (
+        <div
+          class="project__live"
+          data-live-preview
+          data-timeout-ms="8000"
+          inert
+        >
+          <iframe
+            src={site.url}
+            title={`Live preview of ${site.name}`}
+            loading="lazy"
+            sandbox="allow-scripts allow-same-origin"
+            referrerpolicy="no-referrer"
+            scrolling="no"
+            tabindex="-1"
+            aria-hidden="true"
+          ></iframe>
+        </div>
+      )}
+    </BrowserFrame>
+  </div>
 
-  <div class="card__body">
-    <div class="card__meta">
+  <div class="project__body">
+    <div class="project__meta">
       <span>{site.location}</span>
       <span aria-hidden="true">·</span>
       <span>Launched {year}</span>
     </div>
     <h3>
-      <a class="card__link" href={site.url} target="_blank" rel="noopener">
+      <a class="project__link" href={site.url} target="_blank" rel="noopener">
         {site.name}
+        <svg class="project__arrow" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M5 11 11 5M6 5h5v5"></path>
+        </svg>
         <span class="visually-hidden">(opens in a new tab)</span>
       </a>
-      <svg class="card__arrow" viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M5 11 11 5M6 5h5v5"></path>
-      </svg>
     </h3>
     <p>{site.description}</p>
-    <ul class="card__tags" aria-label="Highlights">
+    <ul class="project__tags" aria-label="Highlights">
       {site.tags.map((tag) => (
         <li>{tag}</li>
       ))}
@@ -64,17 +73,15 @@ const year = site.launched.slice(0, 4);
 </article>
 
 <script>
-  // Scales each 1280x800 iframe to fit its card, and swaps the badge to
-  // "Live preview" once it loads. If it never loads, the screenshot stays.
+  // Scales each 1280x800 iframe to fit its frame and fades it in once it
+  // loads. If it never loads, the screenshot underneath stays.
   const DESKTOP_WIDTH = 1280;
 
   for (const live of document.querySelectorAll<HTMLElement>(
     "[data-live-preview]",
   )) {
     const iframe = live.querySelector("iframe");
-    const badge =
-      live.parentElement?.querySelector<HTMLElement>("[data-badge]");
-    if (!iframe || !badge) continue;
+    if (!iframe) continue;
 
     new ResizeObserver(([entry]) => {
       live.style.setProperty(
@@ -105,51 +112,57 @@ const year = site.launched.slice(0, 4);
       nearView.disconnect();
       window.clearTimeout(timeout);
       live.classList.add("is-loaded");
-      badge.textContent = "Live preview";
     });
   }
 </script>
 
 <style>
-  .card {
+  .project {
     position: relative;
     display: grid;
-    align-content: start;
+    align-items: center;
     gap: var(--space-5);
-    padding: var(--space-3);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    background: var(--color-surface);
-    box-shadow: var(--shadow-card);
-    transition:
-      box-shadow var(--duration-base) var(--ease-out),
-      translate var(--duration-base) var(--ease-out);
   }
 
-  .card:hover {
+  @media (min-width: 60rem) {
+    .project {
+      grid-template-columns: 1.6fr 1fr;
+      gap: var(--space-8);
+    }
+
+    .project--flip {
+      grid-template-columns: 1fr 1.6fr;
+    }
+
+    .project--flip .project__preview {
+      order: 2;
+    }
+  }
+
+  .project__preview {
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-lift);
-    translate: 0 -4px;
   }
 
-  .card__shot {
+  .project__shot {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top;
   }
 
-  .card__live {
+  .project__live {
     position: absolute;
     inset: 0;
     opacity: 0;
     transition: opacity var(--duration-base) ease;
   }
 
-  .card__live.is-loaded {
+  .project__live.is-loaded {
     opacity: 1;
   }
 
-  .card__live iframe {
+  .project__live iframe {
     width: 1280px;
     height: 800px;
     border: 0;
@@ -158,13 +171,12 @@ const year = site.launched.slice(0, 4);
     pointer-events: none;
   }
 
-  .card__body {
+  .project__body {
     display: grid;
     gap: var(--space-3);
-    padding: 0 var(--space-3) var(--space-3);
   }
 
-  .card__meta {
+  .project__meta {
     display: flex;
     gap: var(--space-2);
     color: var(--color-muted);
@@ -172,54 +184,55 @@ const year = site.launched.slice(0, 4);
   }
 
   h3 {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
   }
 
-  .card__link {
+  .project__link {
     text-decoration: none;
   }
 
-  /* The whole card is clickable through the title link. */
-  .card__link::after {
+  /* The whole row is clickable through the title link. */
+  .project__link::after {
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
   }
 
-  .card__link:focus-visible {
+  .project__link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+
+  .project__link:focus-visible {
     outline: none;
   }
 
-  .card__link:focus-visible::after {
+  .project__link:focus-visible::after {
     outline: 2px solid var(--color-focus);
-    outline-offset: 3px;
+    outline-offset: 6px;
   }
 
-  .card__arrow {
-    width: 18px;
-    height: 18px;
+  /* Inline, so it follows the last word when the name wraps. */
+  .project__arrow {
+    display: inline-block;
+    width: 0.55em;
+    height: 0.55em;
+    margin-left: 0.15em;
+    vertical-align: 0.15em;
     fill: none;
     stroke: var(--color-accent);
     stroke-width: 1.75;
     stroke-linecap: round;
     stroke-linejoin: round;
-    transition: translate var(--duration-fast) ease;
   }
 
-  .card:hover .card__arrow {
-    translate: 2px -2px;
-  }
-
-  .card__body p {
+  .project__body p {
     color: var(--color-muted);
-    font-size: var(--font-size-sm);
   }
 
-  .card__tags {
+  .project__tags {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
@@ -228,7 +241,7 @@ const year = site.launched.slice(0, 4);
     list-style: none;
   }
 
-  .card__tags li {
+  .project__tags li {
     padding: 0.2rem 0.7rem;
     border-radius: var(--radius-pill);
     background: var(--color-accent-soft);

@@ -7,7 +7,7 @@ import { hero } from "../../config/site";
 <section class="hero" aria-labelledby="hero-title">
   <div class="container hero__inner">
     <div class="hero__copy">
-      <p class="eyebrow">{hero.eyebrow}</p>
+      <p class="hero__hello">{hero.hello}</p>
       <h1 id="hero-title">{hero.title}</h1>
       <p class="hero__lead">{hero.lead}</p>
       <div class="hero__actions">
@@ -35,22 +35,30 @@ import { hero } from "../../config/site";
     gap: var(--space-6);
   }
 
+  /* Sits above the art, whose outer contours spill past its box. */
   .hero__copy {
+    position: relative;
+    z-index: 1;
     display: grid;
     gap: var(--space-5);
     max-width: 42rem;
   }
 
+  .hero__hello {
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+  }
+
   h1 {
     font-size: var(--font-size-hero);
-    font-weight: 800;
+    font-weight: 500;
     line-height: var(--line-tight);
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
   .hero__lead {
-    max-width: 34rem;
+    max-width: 32rem;
     color: var(--color-muted);
     font-size: var(--font-size-lg);
     line-height: 1.55;
@@ -63,8 +71,10 @@ import { hero } from "../../config/site";
     margin-top: var(--space-2);
   }
 
+  /* Smaller on phones, with room above for the contours that spill upward. */
   .hero__art {
-    width: min(100%, 34rem);
+    width: min(72%, 20rem);
+    margin-top: var(--space-8);
     justify-self: center;
   }
 
@@ -79,6 +89,7 @@ import { hero } from "../../config/site";
 
     .hero__art {
       width: 118%;
+      margin-top: 0;
       margin-right: -12%;
     }
   }

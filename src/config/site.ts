@@ -38,59 +38,45 @@ export const site = {
 } as const;
 
 export const hero = {
-  eyebrow: "Software engineer · St. John's, NL",
-  title: "Websites for golf businesses.",
-  lead: "I design and build fast, modern sites for golf courses, simulators, clubs and golf brands. Booking, online stores and local search, handled by one engineer from first sketch to launch.",
+  hello: "Hi, I'm Will O'Driscoll.",
+  title: "I build websites for golf courses, simulators and shops",
+  lead: "I'm a software engineer in St. John's. I design, build and look after every site myself, including online booking, stores and local search.",
   primaryCta: { href: "#work", label: "See the work" },
-  secondaryCta: { href: "#contact", label: "Start a project" },
+  secondaryCta: { href: "#contact", label: "Get in touch" },
 } as const;
 
-export type ServiceIcon = "tee" | "calendar" | "pin" | "flag";
-
 export const services: ReadonlyArray<{
-  icon: ServiceIcon;
   title: string;
   body: string;
 }> = [
   {
-    icon: "tee",
     title: "Design and build",
     body: "A custom site built around your course or brand, not a template. Fast on every phone, easy to read, easy to update.",
   },
   {
-    icon: "calendar",
     title: "Booking and stores",
     body: "Tee times, simulator bays, lessons or products. I set up third-party integrations so customers can pay and book online.",
   },
   {
-    icon: "pin",
     title: "Local search",
     body: "Structured data, business listing guidance and clean page titles, so golfers nearby find you first.",
   },
   {
-    icon: "flag",
     title: "Hosting and care",
     body: "I deploy, monitor and keep your site current. Need a new menu, event or season's hours? Send a message and it's done.",
   },
 ];
 
-// In-progress cards live in src/content/in-progress (one JSON file each).
 export const work = {
-  nextCard: {
-    title: "Your course could be next.",
-    body: "Courses, simulators, clubs and golf brands.",
-    cta: { href: "#contact", label: "Start a project" },
-  },
-} as const;
-
-export const statement = {
-  lead: "This site is simple on purpose.",
-  follow: "The detail goes into yours.",
+  // Real projects under way right now, shown as a count (never named before
+  // launch). Keep it true: lower it when one launches, 0 hides the line.
+  inProgress: 2 as number,
+  nextCta: { href: "#contact", label: "Want yours to be next? Get in touch." },
 } as const;
 
 export const contact = {
-  title: "Let's build your club's site.",
-  body: "Tell me about your course, simulator or shop. I reply within a day.",
+  title: "Got a project in mind?",
+  body: "Send me a few lines about your business and what you want the site to do. I reply within a day.",
 } as const;
 
 export const notFound = {
