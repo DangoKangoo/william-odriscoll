@@ -129,3 +129,9 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - No client names or links in Services.
   **Why:** William's call. That would repeat the Work section.
 - The copy never claims clients edit their own site. Changes go through William.
+
+## 2026-09-23: Services wording
+
+- No brand names in Services copy (no Acuity, Square or Google Business Profile). Describe the ability, e.g. "third-party booking and payment services".
+  **Why:** William's call. Brand names read as name-dropping.
+- Design and build bullets list concrete abilities: mobile-first and fast, pages for rates, hours, lessons and events, and accessible and easy to read.
