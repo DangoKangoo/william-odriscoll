@@ -58,9 +58,9 @@ export const services: ReadonlyArray<{
     title: "Design and build",
     body: "A custom site built around your course or venue, not a template.",
     points: [
-      "Rates, hours and directions where golfers look first",
-      "Fast on a phone, even from the parking lot",
-      "Your photos, your colours, your voice",
+      "Mobile-first layout that loads fast",
+      "Pages for rates, hours, lessons and events",
+      "Accessible and easy to read for every golfer",
     ],
   },
   {
@@ -70,7 +70,7 @@ export const services: ReadonlyArray<{
     points: [
       "Tee times, simulator bays and lessons",
       "Gift cards, memberships and pro shop products",
-      "Connected to the tools you already use, like Acuity or Square",
+      "Works with third-party booking and payment services",
     ],
   },
   {
@@ -78,7 +78,7 @@ export const services: ReadonlyArray<{
     title: "Local search",
     body: "Golfers nearby find you before they find anyone else.",
     points: [
-      "Google Business Profile setup and guidance",
+      "Business listing setup for search and maps",
       "Structured data for your hours, location and contact details",
       "Page titles that match what golfers actually search",
     ],
