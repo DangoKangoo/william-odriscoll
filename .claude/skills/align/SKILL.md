@@ -8,6 +8,21 @@ description: Requirements alignment gate for William's portfolio site. Use BEFOR
 William wants to be a participant in scoping, never handed guesses. No code, no file
 edits, no installs until this process ends with an explicit "yes".
 
+## Fast path: clear, specific requests
+
+If William's request already says exactly what to change ("add another of that
+card", "remove that line", "make the flag green"), don't run question rounds.
+Read DECISIONS.md, build it, and state any small decisions you made in one
+line. Still log it in Step 5 and still use `ship` for the PR.
+
+Ask only when a detail is truly ambiguous and the wrong guess matters (like the
+exact spelling of a business name), or when the change conflicts with a locked
+decision or with honesty (e.g. claiming work that doesn't exist). Then ask one
+focused question, not a round.
+
+Use the full process below for broad or open-ended work ("make it more
+polished", new sections, new features).
+
 ## Step 1: Load what is already decided
 
 1. Read `docs/DECISIONS.md` (create it in Step 5 if missing).

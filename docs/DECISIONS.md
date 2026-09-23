@@ -116,3 +116,8 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - The "next" card is the same size as the other cards and sits in the grid like them (left column today). Rows are equal height on desktop.
 - A mirrored fairway divider sits between Work and Services.
 - The repo, the URL and the GitHub Pages path stay `william-odriscoll`.
+
+## 2026-09-23: Align fast path
+
+- For clear, specific requests, `align` skips question rounds: build it and state any small decisions in one line. Ask one focused question only for a real ambiguity, a conflict with a locked decision, or an honesty concern. `ship` still applies.
+  **Why:** William rejected a question round on a specific request ("I literally just want you to add the exact card"). The full process stays for broad or open-ended work.
