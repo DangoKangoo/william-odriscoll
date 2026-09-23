@@ -121,3 +121,11 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 
 - For clear, specific requests, `align` skips question rounds: build it and state any small decisions in one line. Ask one focused question only for a real ambiguity, a conflict with a locked decision, or an honesty concern. `ship` still applies.
   **Why:** William rejected a question round on a specific request ("I literally just want you to add the exact card"). The full process stays for broad or open-ended work.
+
+## 2026-09-23: Services copy
+
+- Services keeps its 4 cards, icons, heading and layout. Each card has a one-line intro plus 3 deliverable bullets (`points` in `config/site.ts`).
+- Plain golf operations language (tee times, season hours, pro shop), no puns.
+- No client names or links in Services.
+  **Why:** William's call. That would repeat the Work section.
+- The copy never claims clients edit their own site. Changes go through William.

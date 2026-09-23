@@ -12,7 +12,7 @@ import { services } from "../../config/site";
       </h2>
     </header>
 
-    <ul class="services">
+    <ul class="services" role="list">
       {services.map((service, index) => (
         <li class="service" data-reveal style={`--reveal-index: ${index}`}>
           <span class="service__icon">
@@ -20,6 +20,11 @@ import { services } from "../../config/site";
           </span>
           <h3>{service.title}</h3>
           <p>{service.body}</p>
+          <ul class="service__points" role="list">
+            {service.points.map((point) => (
+              <li>{point}</li>
+            ))}
+          </ul>
         </li>
       ))}
     </ul>
@@ -75,5 +80,32 @@ import { services } from "../../config/site";
   p {
     color: var(--color-muted);
     font-size: var(--font-size-sm);
+  }
+
+  .service__points {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 0;
+    padding: var(--space-4) 0 0;
+    border-top: 1px solid var(--color-line);
+    list-style: none;
+    font-size: var(--font-size-sm);
+  }
+
+  .service__points li {
+    position: relative;
+    padding-left: var(--space-4);
+  }
+
+  /* Small green dot, like a ball marker. */
+  .service__points li::before {
+    content: "";
+    position: absolute;
+    top: 0.55em;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
   }
 </style>
