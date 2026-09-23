@@ -95,21 +95,6 @@ svg {
   color: var(--color-accent);
 }
 
-.section-head {
-  display: grid;
-  gap: var(--space-3);
-  max-width: 40rem;
-  margin-bottom: var(--space-7);
-}
-
-.section-head h2 {
-  font-size: var(--font-size-xl);
-}
-
-.section-head p {
-  color: var(--color-muted);
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;

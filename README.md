@@ -33,7 +33,7 @@ npm run dev                        # http://localhost:4321/william-odriscoll/
    location: St. John's, NL
    tags: [Booking, Local SEO] # 1 to 5
    launched: 2026-10 # YYYY-MM
-   featured: true # true = full preview card, false = "More work" list
+   featured: true # true = full-width row, false = "More work" list
    order: 3 # lower shows first
    ```
 

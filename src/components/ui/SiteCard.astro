@@ -191,10 +191,12 @@ const year = site.launched.slice(0, 4);
     text-decoration: none;
   }
 
-  /* The whole row is clickable through the title link. */
+  /* The whole row is clickable through the title link. z-index keeps it above
+     the preview, which paints later in flipped rows. */
   .project__link::after {
     content: "";
     position: absolute;
+    z-index: 1;
     inset: 0;
     border-radius: var(--radius-md);
   }

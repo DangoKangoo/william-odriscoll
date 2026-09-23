@@ -71,6 +71,10 @@ export const work = {
   // Real projects under way right now, shown as a count (never named before
   // launch). Keep it true: lower it when one launches, 0 hides the line.
   inProgress: 2 as number,
+  inProgressLine: (count: number) =>
+    count === 1
+      ? "1 more site is in progress. It'll show up here when it launches."
+      : `${count} more sites are in progress. They'll show up here when they launch.`,
   nextCta: { href: "#contact", label: "Want yours to be next? Get in touch." },
 } as const;
 

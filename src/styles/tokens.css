@@ -44,13 +44,10 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-pill: 999px;
-  --shadow-card:
-    0 1px 2px rgb(16 35 26 / 6%), 0 8px 24px -12px rgb(16 35 26 / 18%);
   --shadow-lift:
     0 2px 4px rgb(16 35 26 / 6%), 0 22px 40px -18px rgb(16 35 26 / 30%);
 
   /* Motion */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 180ms;
   --duration-base: 420ms;
   --duration-slow: 1600ms;

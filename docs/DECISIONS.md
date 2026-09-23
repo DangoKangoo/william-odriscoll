@@ -19,7 +19,7 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
   **Why:** cross-origin iframes cannot reliably report a CSP block, so `npm run shots` checks the headers ahead of time and saves the result to `src/data/embeds.json`.
 - Screenshots: `npm run shots` (Playwright), committed to `src/assets/shots/`. The build fails if a site is missing one.
 - Site entry fields: name, url, description, location, tags, launched (YYYY-MM), featured, order.
-- `featured: true` gets a full preview card; `featured: false` is listed under "More work" as a compact link.
+- ~~`featured: true` gets a full preview card; `featured: false` is listed under "More work" as a compact link.~~ Superseded 2026-09-23, see "Less template, more person".
 - Contact: visible email `willod17@outlook.com` plus a mailto button. No form.
 - Analytics: none.
 - CI on every PR: Prettier, `astro check`, build, lychee link check, Lighthouse (performance and accessibility at least 0.9).
@@ -162,6 +162,12 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Display font: Newsreader (serif) replaces Manrope. Inter stays for body text.
   **Why:** a serif fits golf's scorecard and yardage-book heritage and moves away from the default "modern template" look.
 - Motion: only the hero shot loop and the waving flag. No scroll reveals, card lifts or button and arrow nudges.
+- Still true from the initial build: the off-white background, the deep golf-green accent, Inter for body text, the dimple texture on Contact and the fairway dividers.
+- `featured: true` gets a full-width row; `featured: false` is listed under "More work" as a compact link.
+- The Work intro paragraph ("Real, live sites...") is removed. The heading stands alone.
+- Contact body: "Send me a few lines about your business and what you want the site to do. I reply within a day."
+- The name in the header and footer is a size up (`--font-size-lg`) so the serif reads at the same weight. The hero headline size tops out at 4rem instead of 4.75rem.
+- Only the normal (upright) style of each font is loaded. Nothing uses italic.
 - Open: the share image (`npm run brand`) still uses Manrope.
 - Hero: no label above the headline. "Hi, I'm Will O'Driscoll." then "I build websites for golf courses, simulators and shops", then "I'm a software engineer in St. John's. I design, build and look after every site myself, including online booking, stores and local search." Buttons: "See the work" and "Get in touch".
   **Why:** William's call. Naming clients in the intro read as small and unprofessional. The Work section shows them.

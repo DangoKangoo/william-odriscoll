@@ -9,10 +9,11 @@ import { work } from "../../config/site";
 const sites = await getSites();
 const featured = sites.filter((site) => site.featured);
 const more = sites.filter((site) => !site.featured);
-const inProgressLine =
-  work.inProgress === 1
-    ? "1 more site is in progress. It'll show up here when it launches."
-    : `${work.inProgress} more sites are in progress. They'll show up here when they launch.`;
+if (!Number.isInteger(work.inProgress) || work.inProgress < 0) {
+  throw new Error(
+    `[Work] work.inProgress must be a whole number, 0 or more. Got: ${work.inProgress}`,
+  );
+}
 ---
 
 <section id="work" class="section work" aria-labelledby="work-title">
@@ -44,7 +45,9 @@ const inProgressLine =
     )}
 
     <p class="work__next">
-      {work.inProgress > 0 && <span>{inProgressLine}</span>}
+      {work.inProgress > 0 && (
+        <span>{work.inProgressLine(work.inProgress)}</span>
+      )}
       <a href={work.nextCta.href}>{work.nextCta.label}</a>
     </p>
   </div>

@@ -17,6 +17,7 @@ export default defineConfig({
       name: "Newsreader",
       cssVariable: "--font-display",
       weights: ["400 700"],
+      styles: ["normal"],
       fallbacks: ["serif"],
     },
     {
@@ -24,6 +25,7 @@ export default defineConfig({
       name: "Inter",
       cssVariable: "--font-body",
       weights: ["400 600"],
+      styles: ["normal"],
       fallbacks: ["sans-serif"],
     },
   ],
