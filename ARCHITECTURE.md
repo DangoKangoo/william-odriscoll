@@ -32,6 +32,8 @@ src/
     global.css            Reset, base type, shared utilities
 scripts/shots.mjs         Screenshot + framing check for each site
 scripts/brand.mjs         Favicons, app icons, manifest, share image and brand/ files from lib/logo.ts
+scripts/check.sh          Every local check in one command (CI runs it too)
+specs/                    One spec per non-trivial change (align writes it, run-spec builds it)
 brand/                    Logo files for use outside the site (not deployed)
 .github/workflows/
   ci.yml                  PR checks (also reused by deploy)

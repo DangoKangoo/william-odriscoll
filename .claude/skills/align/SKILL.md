@@ -1,19 +1,20 @@
 ---
 name: align
-description: Requirements alignment gate for William's portfolio site. Use BEFORE starting any new feature, page, section, design change, content change, dependency, infra/CI change, or any request that is broad or ambiguous. Asks every question needed so Claude and William are 100% aligned, reflects the answers back for explicit confirmation, and logs the decisions. Trigger on "/align", "let's add", "let's build", "change the", "new section", "redesign", or any non-trivial request on this project.
+description: Requirements alignment gate for William's portfolio site. Use BEFORE starting any new feature, page, section, design change, content change, dependency, infra/CI change, or any request that is broad or ambiguous. Asks the questions that change the outcome, writes the agreed spec to specs/<slug>.md for run-spec, gets explicit confirmation, and logs the decisions. Trigger on "/align", "let's add", "let's build", "change the", "new section", "redesign", or any non-trivial request on this project.
 ---
 
 # Align: get 100% on the same page before building
 
-William wants to be a participant in scoping, never handed guesses. No code, no file
-edits, no installs until this process ends with an explicit "yes".
+William wants to be a participant in scoping, never handed guesses. No code, no
+installs and no file edits until this process ends with an explicit "yes". The
+one exception is the spec draft in Step 4, because it's the thing being agreed.
 
 ## Fast path: clear, specific requests
 
 If William's request already says exactly what to change ("add another of that
 card", "remove that line", "make the flag green"), don't run question rounds.
 Read DECISIONS.md, build it, and state any small decisions you made in one
-line. Still log it in Step 5 and still use `ship` for the PR.
+line. No spec. Still log it in Step 5 and still use `ship` for the PR.
 
 Ask only when a detail is truly ambiguous and the wrong guess matters (like the
 exact spelling of a business name), or when the change conflicts with a locked
@@ -54,41 +55,55 @@ Skip categories that genuinely do not apply, but say which ones you skipped.
 
 ## Step 3: Ask, in rounds
 
+Ask only where a wrong guess changes what gets built. Everything else is an
+assumption: pick the sensible default (usually the existing pattern) and list
+it under Assumptions in the spec, where William can correct it. Never ask about
+naming, ordering or anything an existing pattern already answers.
+
 - Use `AskUserQuestion`, max 4 questions per round, 2 to 4 concrete options each.
 - Put the recommended option first, labelled "(Recommended)", with a one-line why.
 - Use `preview` for visual choices (layout mockups, color palettes, code shapes).
 - Ask the highest-impact questions first; later answers often depend on earlier ones.
-- Keep going round after round until no open questions remain. Do not stop early
-  because it feels like "enough".
+- Keep going round after round until no outcome-changing questions remain. Do
+  not stop early because it feels like "enough".
 - Free-text answers ("Other") that raise new unknowns get follow-up questions.
 
-## Step 4: Reflect back and confirm
+## Step 4: Write the spec and confirm
 
-Present a short spec in this exact shape:
+Copy `specs/TEMPLATE.md` to `specs/<slug>.md` and fill in every section:
 
-```
-Request: <one line>
-In scope: <bullets>
-Out of scope: <bullets>
-Decisions: <bullets, each one line>
-New dependencies: <list or "none">
-Open risks: <list or "none">
-Acceptance: <how William checks it>
-```
+- **Goal**, **Non-goals**: from the scope answers.
+- **Assumptions**: every default you picked instead of asking.
+- **Acceptance criteria**: checkable statements a reviewer who didn't write the
+  code can mark met or not from the diff, a command or the built page. Not
+  "looks good"; "the Services section lists 4 items, each from `site.ts`".
+- **Quality criteria**: required for subjective work (copy, design, layout,
+  structure): 3 to 5 checkable criteria, e.g. "follows the card pattern in
+  `SiteCard.astro`", "no new dependency", "every color from `tokens.css`".
+  Delete the section when the work isn't subjective. The reviewer grades only
+  these two lists, so anything that matters must be in one of them.
+- **Tasks**: small, ordered, each one independently verifiable with its own
+  "Done when" line, and each leaving `bash scripts/check.sh` passing.
 
+Show William the spec's path and a short summary (goal, non-goals, the
+assumptions, the criteria, task titles), plus new dependencies and open risks.
 Then ask one final `AskUserQuestion`: "Is this 100% right?" with options
 "Yes, build it" / "Change something". Only "Yes, build it" unlocks building.
+"Change something" updates the spec, then asks again.
 
 ## Step 5: Log it
 
 Append confirmed decisions to `docs/DECISIONS.md` under a dated heading
 (`## YYYY-MM-DD: <topic>`). One line per decision, plus a **Why:** line where the
-reason is not obvious. Superseded decisions get struck through, not deleted.
+reason is not obvious, and a link to the spec. Superseded decisions get struck
+through, not deleted.
+
+Then say the next step: `/run-spec <slug>`.
 
 ## Rules
 
 - No em dashes anywhere (copy, docs, comments, replies).
-- Never assume defaults silently. If you would pick a default, ask with it marked
-  "(Recommended)".
+- Never assume silently. A default either goes in the spec's Assumptions or, if a
+  wrong guess changes the outcome, gets asked with it marked "(Recommended)".
 - Flag every new dependency, cost, or account William must create.
 - Ask before anything destructive (deleting files, force pushes, repo settings).

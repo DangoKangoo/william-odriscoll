@@ -1,41 +1,47 @@
 ---
 name: ship
-description: Finish a task by opening a pull request and reviewing it. Use whenever a task, feature or fix on this project is done (code written and verified locally), or when William says "/ship", "open a PR", "ship it" or "let's PR". Always asks William if he's ready to PR first, then opens the PR, runs an independent review, reports the findings, and never merges without his go-ahead.
+description: Finish a task by opening a pull request and reviewing it. This is the project's PR skill (/pr means /ship). Use whenever a task, feature or fix on this project is done (code written and verified locally), or when William says "/ship", "/pr", "open a PR", "ship it" or "let's PR". Refuses to continue unless scripts/check.sh passes, summarizes the diff against the spec's acceptance criteria, asks William before opening the PR, links the spec, runs the reviewer agent, and never merges without his go-ahead.
 ---
 
 # Ship: PR and review when a task is done
 
-Run this at the end of every task. The companion to `align`: `align` agrees the
-scope before building, and `ship` checks the result before it merges.
+Run this at the end of every task. The companion to `align` and `run-spec`:
+`align` agrees the scope and writes the spec, `run-spec` builds it, and `ship`
+checks the result before it merges.
 
 Live site: https://dangokangoo.github.io/william-odriscoll/
 
 ## Step 1: Verify locally
 
-Run all of these first, so the question in Step 2 is based on real results.
-
 ```sh
-npm run format:check
-npm run check
-npm run build
+bash scripts/check.sh
 ```
+
+If it fails, stop here. Show William the failing lines and don't go on to
+Step 2 until a fresh run passes. Don't work around a failure.
 
 If content in `src/content/sites/` changed, also confirm the matching
 screenshot and `src/data/embeds.json` entry exist (`npm run shots -- <slug>`).
 
-Don't work around a failure. Note it for Step 2.
+Find the spec: the `specs/<slug>.md` that's new or changed on this branch. Fast
+path work has no spec; say so and skip the spec parts below.
 
 ## Step 2: Ask if we're ready to PR
 
-Never open a PR without asking. Use `AskUserQuestion` with a two-line summary
-of what changed and the Step 1 results:
+Never open a PR without asking. Use `AskUserQuestion`, and put this summary in
+the question:
 
-- "Yes, open the PR" (Recommended only when every check passed)
+- What changed, in two lines.
+- With a spec: each acceptance and quality criterion, marked met / partial /
+  missing, with the file or command that shows it. If `run-spec` already
+  reported the reviewer's verdict on this same diff, use that.
+- Any change in the diff the spec didn't ask for.
+
+Options:
+
+- "Yes, open the PR" (Recommended only when every criterion is met)
 - "Not yet": ask what's left, finish it, then go back to Step 1
 - "Change something first": make the change, then go back to Step 1
-
-If a check failed, show the failing lines in the question and recommend
-"Not yet" or "Change something first".
 
 ## Step 3: Branch and commit
 
@@ -43,10 +49,12 @@ If a check failed, show the failing lines in the question and recommend
 - Never commit to `main` (it's protected). If on `main`, create a branch named
   `<type>/<short-topic>`, where type is `feat`, `fix`, `ci`, `docs`, `chore` or `style`.
 - Group related changes into logical commits. The message says why, not just what.
+- Commit the spec and its `.progress.md` with the work they describe.
 - Check for stray files (preview screenshots, `.lighthouseci`, scratch scripts)
   before committing. Never commit secrets or `.env` files.
-- The global gitignore excludes `.claude/`. Force-add only the specific skill
-  file (`git add -f .claude/skills/<name>/SKILL.md`), never the whole folder,
+- The global gitignore excludes `.claude/`. Force-add only the specific shared
+  files (`git add -f .claude/skills/<name>/SKILL.md`, `.claude/agents/<name>.md`,
+  `.claude/hooks/<name>.mjs`, `.claude/settings.json`), never the whole folder,
   because `.claude/settings.local.json` must stay uncommitted.
 
 ## Step 4: Open the PR
@@ -58,8 +66,16 @@ If a check failed, show the failing lines in the question and recommend
 3. Otherwise create it with `gh pr create --base main`. Body:
 
 ```
+## Spec
+[specs/<slug>.md](https://github.com/DangoKangoo/william-odriscoll/blob/<branch>/specs/<slug>.md)
+(or "none, fast path")
+
 ## Changed
 - <bullets>
+
+## Acceptance criteria
+- [x] <criterion>: <evidence>
+- [ ] <criterion>: <what's partial or missing>
 
 ## Why
 - <bullets, link the DECISIONS.md entry if align was used>
@@ -75,27 +91,18 @@ Title follows the commit convention (`feat: ...`). No em dashes anywhere.
 
 ## Step 5: Review the PR
 
-Default: spawn an independent reviewer with the `Agent` tool
-(`subagent_type: general-purpose`) so the review isn't done by the same context
-that wrote the code. Tell it to review only (no edits, commits, comments or
-merges) and give it:
+If `run-spec` already got an approve from the reviewer on this exact diff and
+nothing has changed since, say so and skip to Step 6.
 
-- The PR number and `gh pr diff <n>` output (or tell it to run that)
-- The task goal and the relevant `docs/DECISIONS.md` entries
-- This checklist:
-  - Correctness bugs, broken edge cases, error states
-  - Fail loud: no swallowed errors, no placeholder data shown as real
-  - Follows existing patterns (tokens in `tokens.css`, copy in `config/site.ts`,
-    one YAML per site, components in the right folder)
-  - Accessibility: alt text, focus states, contrast, reduced motion
-  - Performance: image sizes, new JS, new dependencies (flag every one)
-  - Scope creep: anything changed that wasn't asked for
-  - No em dashes in copy, comments, docs or commit messages
-- Ask it to return findings ranked by severity, each with a file:line and a
-  concrete failure scenario, and to say "no findings" rather than invent any.
+Otherwise spawn the reviewer agent (`Agent`, `subagent_type: reviewer`,
+defined in `.claude/agents/reviewer.md`), so the review isn't done by the
+context that wrote the code. Give it the PR number and the spec path (or, on
+the fast path, the task goal and the relevant `docs/DECISIONS.md` entries). It
+returns a verdict, each criterion graded with evidence, and required changes
+with file:line references.
 
-If the Agent tool isn't available, review it yourself against the same checklist
-(the `code-review` skill works well for this), and say it was a self-review.
+If the Agent tool isn't available, review it yourself against the same
+instructions in `.claude/agents/reviewer.md`, and say it was a self-review.
 
 Verify each finding yourself before reporting it. Drop anything that doesn't
 hold up, and say how many you dropped.
