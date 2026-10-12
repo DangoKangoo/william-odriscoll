@@ -38,5 +38,5 @@ Portfolio site for **W. O'Design**, William O'Driscoll's web studio for golf bus
 
 - **PostToolUse:** every edited file is run through Prettier.
 - **PreToolUse:** blocks any `git push` while on `main`, to `main`, or with force. `enforce_admins` is off, so branch protection alone won't stop an admin push.
-- **Stop:** while there are uncommitted changes, Claude can't finish until `check.sh` passes. It skips unchanged trees and gives up after 3 blocks in a turn, with a warning.
+- **Stop:** while there are uncommitted changes, Claude can't finish until `check.sh` passes. It skips unchanged trees, skips with a notice while background tasks (subagents, background commands) run, and gives up after 3 blocks in a turn, with a warning.
 - The hooks are Node scripts run through Git Bash on Windows. Test one by piping its JSON input into `node .claude/hooks/<name>.mjs`.

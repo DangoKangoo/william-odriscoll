@@ -15,8 +15,10 @@ don't read source files or diffs yourself beyond what a step below needs.
    and more than one spec has unticked tasks, ask which one.
 2. Refuse (and say why) if it has no Acceptance criteria or no Tasks, or still
    reads like the unfilled `specs/TEMPLATE.md`. Point William at `/align`.
-3. If you're not on the branch named in the spec, switch to it, or create it
-   from the current branch (`git switch -c <branch>`). Never build on `main`.
+3. Read the spec's Branch line: `` Branch: `<branch>` from `<parent>` ``. The
+   parent is `main` if the line doesn't name one. If you're not on the
+   branch, switch to it, or create it from the parent
+   (`git switch -c <branch> <parent>`). Never build on `main`.
 4. If `git status` shows changes other than `specs/` and `docs/DECISIONS.md`,
    ask before starting: they'd get mixed into this work.
 5. Create `specs/<slug>.progress.md` if it doesn't exist:
@@ -49,18 +51,22 @@ For the first task whose box is `- [ ]`:
 
    Rules:
    - Do only this task. Nothing from later tasks, nothing in Non-goals.
-   - Make `bash scripts/check.sh` pass before you finish.
    - Don't commit, push, or tick boxes in the spec.
-   - Before finishing, append to specs/<slug>.progress.md:
 
-     ## T<n>: <title>
-     - Did: <files changed, one line each>
-     - Decisions: <choice> because <why>
-     - Dead ends: <what didn't work, so nobody retries it>
-     - Surprises: <anything unexpected about the code>
-     - Next task should know: <...>
+   When the work is done, finish in this order:
+   1. Append your entry to specs/<slug>.progress.md with the Edit tool,
+      never the shell, so the format hook runs on it:
 
-     Short bullets. Write "none" rather than leave a line out.
+      ## T<n>: <title>
+      - Did: <files changed, one line each>
+      - Decisions: <choice> because <why>
+      - Dead ends: <what didn't work, so nobody retries it>
+      - Surprises: <anything unexpected about the code>
+      - Next task should know: <...>
+
+      Short bullets. Write "none" rather than leave a line out.
+   2. Run `bash scripts/check.sh` last, so it covers the progress entry, and
+      make it pass. If you change any file after that, run it again.
 
    Reply with: files changed, check.sh result, and anything blocking.
    ```
@@ -80,7 +86,8 @@ For the first task whose box is `- [ ]`:
 When every box is ticked and check.sh passes:
 
 1. Spawn the reviewer (`subagent_type: reviewer`) with: the spec path, "the
-   working tree against main", and, after round 1, the previous findings.
+   working tree against `<parent>`" (the parent from Step 0), and, after
+   round 1, the previous findings.
 2. **approve**: go to Step 3.
 3. **request changes**: spawn a fresh `general-purpose` fixer with the spec
    path, the progress path and the reviewer's "Required changes" verbatim.

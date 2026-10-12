@@ -1,6 +1,7 @@
 // Stop: don't let Claude finish while scripts/check.sh fails on uncommitted
 // changes. It skips when the tree is clean or unchanged since the last pass, so
-// question-and-answer turns cost nothing. Within one turn it blocks at most
+// question-and-answer turns cost nothing. It also skips, with a visible
+// message, while background tasks run. Within one turn it blocks at most
 // MAX_BLOCKS times, then lets Claude stop with a visible warning, and doesn't
 // re-run on that same tree until something changes.
 import { execFileSync, spawnSync } from "node:child_process";
@@ -19,6 +20,19 @@ const git = (...args) =>
   execFileSync("git", args, { cwd: root, maxBuffer: MAX_BUFFER });
 
 if (git("status", "--porcelain").length === 0) process.exit(0);
+
+const respond = (output) => console.log(JSON.stringify(output));
+
+// A subagent or background command may be mid-edit, so a failure now could be
+// work in progress. The next stop after they finish runs the check.
+const running = input.background_tasks ?? [];
+if (running.length > 0) {
+  const types = running.map((task) => task.type).join(", ");
+  respond({
+    systemMessage: `check.sh skipped: ${running.length} background task(s) still running (${types}).`,
+  });
+  process.exit(0);
+}
 
 // Kept outside the repo so it never shows up in git status or Prettier.
 const rootId = createHash("sha256").update(root).digest("hex").slice(0, 12);
@@ -41,7 +55,6 @@ function treeFingerprint() {
   return hash.digest("hex");
 }
 
-const respond = (output) => console.log(JSON.stringify(output));
 const fingerprint = treeFingerprint();
 
 if (fingerprint === state.passed) process.exit(0);

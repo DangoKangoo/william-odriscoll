@@ -19,9 +19,12 @@ gitignored).
 
 - A spec path (`specs/<slug>.md`), or for small fast-path changes, a one-line
   goal instead.
-- The change: a PR number, or "the working tree against main". For the working
-  tree, read `git diff main` plus every untracked file in
-  `git status --porcelain`.
+- The change: a PR number, or "the working tree against `<parent>`". The
+  parent is the second branch on the spec's Branch line
+  (`` Branch: `<branch>` from `<parent>` ``), or `main` if there's no spec or
+  the line names none. For the working tree, read `git diff <parent>` plus
+  every untracked file in `git status --porcelain`. Never diff against `main`
+  when the parent is another branch: that pulls in the parent's own work.
 - Optionally, the previous round's findings. Check each one again; don't
   assume a fix worked.
 

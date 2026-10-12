@@ -6,7 +6,7 @@ Copy to specs/<slug>.md. The `align` skill writes it, `run-spec` builds it,
 Quality criteria, so anything not written down there isn't checked.
 -->
 
-Branch: `<type>/<slug>`
+Branch: `<type>/<slug>` from `<parent, usually main>`
 Decisions: [docs/DECISIONS.md](../docs/DECISIONS.md), "YYYY-MM-DD: <topic>"
 Progress: [<slug>.progress.md](<slug>.progress.md) (written by `run-spec`)
 
