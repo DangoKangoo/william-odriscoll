@@ -34,9 +34,8 @@ Portfolio site for **W. O'Design**, William O'Driscoll's web studio for golf bus
 - **Lighthouse:** `npm run lighthouse` fails locally on Windows (chrome-launcher EPERM). It runs in CI.
 - **`.claude/` is gitignored globally.** Shared files need `git add -f <file>`: `skills/<name>/SKILL.md`, `agents/<name>.md`, `hooks/<name>.mjs`, `settings.json`. Never add the whole folder; `settings.local.json` stays local.
 
-## Hooks (`.claude/settings.json`)
+## Hooks
 
-- **PostToolUse:** every edited file is run through Prettier.
-- **PreToolUse:** blocks any `git push` while on `main`, to `main`, or with force. `enforce_admins` is off, so branch protection alone won't stop an admin push.
-- **Stop:** while there are uncommitted changes, Claude can't finish until `check.sh` passes. It skips unchanged trees, skips with a notice while background tasks (subagents, background commands) run, and gives up after 3 blocks in a turn, with a warning.
-- The hooks are Node scripts run through Git Bash on Windows. Test one by piping its JSON input into `node .claude/hooks/<name>.mjs`.
+- With uncommitted changes, Claude can't finish until `check.sh` passes.
+- `enforce_admins` is off on `main`, so branch protection won't stop an admin push. The push guard hook is what does.
+- How each hook works: `.claude/settings.json` and the header comment in each `.claude/hooks/*.mjs`.

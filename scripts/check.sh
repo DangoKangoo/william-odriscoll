@@ -17,10 +17,12 @@ step "Build (fails on bad site data or a missing screenshot)"
 npm run --silent build
 
 # CLAUDE.md bans em dashes everywhere. Written as UTF-8 bytes so this file
-# doesn't contain one, and so it works in any locale.
+# doesn't contain one, and so it works in any locale. The empty excludesFile
+# drops a global gitignore, so new files it hides (like .claude/) are scanned
+# too, as Prettier checks them; the repo's .gitignore still applies.
 step "No em dashes in tracked or new files"
 set +e
-git grep --untracked -n -I $'\xe2\x80\x94' -- . ':!package-lock.json'
+git -c core.excludesFile= grep --untracked -n -I $'\xe2\x80\x94' -- . ':!package-lock.json'
 status=$?
 set -e
 case $status in

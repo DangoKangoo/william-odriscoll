@@ -16,8 +16,14 @@ const MAX_BUFFER = 256 * 1024 * 1024;
 
 const input = JSON.parse(readFileSync(0, "utf8"));
 const root = process.env.CLAUDE_PROJECT_DIR || input.cwd;
+// An empty core.excludesFile drops the user's global gitignore (which hides
+// .claude/ on William's machine) so new files there count, as they do for
+// Prettier. The repo's own .gitignore still applies.
 const git = (...args) =>
-  execFileSync("git", args, { cwd: root, maxBuffer: MAX_BUFFER });
+  execFileSync("git", ["-c", "core.excludesFile=", ...args], {
+    cwd: root,
+    maxBuffer: MAX_BUFFER,
+  });
 
 if (git("status", "--porcelain").length === 0) process.exit(0);
 
@@ -43,9 +49,12 @@ const state = existsSync(stateFile)
 const save = (changes) =>
   writeFileSync(stateFile, JSON.stringify({ ...state, ...changes }));
 
-// Identifies the exact uncommitted state: tracked changes plus new files.
+// Identifies the exact tree: the commit it sits on, tracked changes and new
+// files. Including HEAD means the same diff on a new base is checked again.
 function treeFingerprint() {
-  const hash = createHash("sha256").update(git("diff", "HEAD", "--binary"));
+  const hash = createHash("sha256")
+    .update(git("rev-parse", "HEAD"))
+    .update(git("diff", "HEAD", "--binary"));
   const untracked = git("ls-files", "--others", "--exclude-standard", "-z")
     .toString()
     .split("\0")
@@ -97,5 +106,5 @@ const tail = run.stdout
 save({ blocks: blocks + 1 });
 respond({
   decision: "block",
-  reason: `scripts/check.sh failed (block ${blocks + 1} of ${MAX_BLOCKS}). Fix it before finishing, or explain why it can't pass.\n\n${tail}`,
+  reason: `scripts/check.sh failed (block ${blocks + 1} of ${MAX_BLOCKS}). Fix it before finishing. If it isn't yours to fix (for example run-spec stopped on a failed task), report the failure instead; this hook stops blocking after ${MAX_BLOCKS} attempts.\n\n${tail}`,
 });

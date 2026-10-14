@@ -63,11 +63,13 @@ Options:
 2. Check for an existing PR: `gh pr view --json number,url`. If one exists,
    the push already updated it. Update its body with `gh pr edit` if the
    summary changed, and skip to Step 5.
-3. Otherwise create it with `gh pr create --base main`. Body:
+3. Otherwise create it with `gh pr create --base main`. Body (the spec link
+   points at `main`: a branch link 404s once `--delete-branch` runs, and the
+   `main` one works from the merge on):
 
 ```
 ## Spec
-[specs/<slug>.md](https://github.com/DangoKangoo/william-odriscoll/blob/<branch>/specs/<slug>.md)
+[specs/<slug>.md](https://github.com/DangoKangoo/william-odriscoll/blob/main/specs/<slug>.md)
 (or "none, fast path")
 
 ## Changed

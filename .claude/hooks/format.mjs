@@ -13,7 +13,11 @@ if (!file || !existsSync(file)) process.exit(0);
 
 // Only files inside this repo (not memory files, scratchpads and the like).
 const relative = path.relative(root, file);
-if (relative.startsWith("..") || path.isAbsolute(relative)) process.exit(0);
+const outside =
+  relative === ".." ||
+  relative.startsWith(`..${path.sep}`) ||
+  path.isAbsolute(relative);
+if (outside) process.exit(0);
 
 const prettier = path.join(
   root,

@@ -12,7 +12,8 @@ don't read source files or diffs yourself beyond what a step below needs.
 ## Step 0: Load and check
 
 1. Find the spec: `specs/<slug>.md` from the argument. If there's no argument
-   and more than one spec has unticked tasks, ask which one.
+   and more than one spec has unticked tasks, ask which one. `TEMPLATE.md` and
+   `*.progress.md` files are never specs.
 2. Refuse (and say why) if it has no Acceptance criteria or no Tasks, or still
    reads like the unfilled `specs/TEMPLATE.md`. Point William at `/align`.
 3. Read the spec's Branch line: `` Branch: `<branch>` from `<parent>` ``. The
@@ -114,7 +115,8 @@ If it all passed, the next step is `/ship`. Don't commit or open a PR here.
 ## Rules
 
 - Orchestrate only. The only files you edit are the spec's checkboxes and the
-  progress file's header.
+  progress file: its header, and short orchestrator notes (a skipped entry, a
+  decision William made mid-run). Never source files.
 - Never tick a box without a passing check.sh that you ran.
 - Never skip, reorder, merge or rewrite tasks without asking William.
 - Report failures as they are. Never mark a failure as passing.
