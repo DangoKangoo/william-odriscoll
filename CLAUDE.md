@@ -2,10 +2,19 @@
 
 Portfolio site for **W. O'Design**, William O'Driscoll's web studio for golf businesses. Astro, static, deployed to GitHub Pages at https://dangokangoo.github.io/william-odriscoll/.
 
+## Commands
+
+- `bash scripts/check.sh`: Prettier check, `astro check` (types and content schema), build, and a scan for em dashes. This is the definition of done, and CI's "Format, types and build" job runs the same script. 10 to 40s.
+- There are no unit tests and no single-test command. The build is the test: the content schema and `getSites()` fail on bad data or a missing screenshot.
+- Link check (lychee) and Lighthouse run in CI only.
+
 ## How to work here
 
-- **Before any change:** run the `align` skill (`.claude/skills/align`). For a clear, specific request, skip the question rounds: build it, and state any small decisions in one line.
-- **When a task is done:** run the `ship` skill (`.claude/skills/ship`). Ask before the PR, get an independent agent review, and ask before merging.
+- **Clear, specific request:** the `align` fast path. Build it, state small decisions in one line, no spec.
+- **Non-trivial work:** `/align` interviews William and writes `specs/<slug>.md` (format: `specs/TEMPLATE.md`). Then `/run-spec <slug>` builds it task by task. Nothing is built before William confirms the spec.
+- **In `run-spec`, the main session only orchestrates.** Each task and each review runs in a fresh subagent. Handoff notes go in `specs/<slug>.progress.md`. A box is ticked only after `check.sh` passes.
+- **PRs only through `/ship`** (it is this repo's `/pr`), and only after William approves. It refuses to continue on a failing `check.sh`, links the spec, and asks again before merging.
+- **Review:** the `reviewer` agent (`.claude/agents/reviewer.md`) is read-only and grades only the spec's acceptance and quality criteria, with evidence.
 - **Decisions:** logged in `docs/DECISIONS.md`. Read it first. Never re-ask something decided there, and strike through anything superseded.
 - **Structure and data flow:** `ARCHITECTURE.md`. Everyday tasks (adding a site, brand assets, search setup): `README.md` and `docs/search-setup.md`.
 - **Copy:** never use em dashes, in copy, comments, docs, commits or replies.
@@ -23,4 +32,10 @@ Portfolio site for **W. O'Design**, William O'Driscoll's web studio for golf bus
 - **In progress:** a count, `work.inProgress` in `src/config/site.ts`, shown as one line under the client sites. Keep it true. Never name a client project before it launches.
 - **Search Console:** the verification code goes in `site.googleSiteVerification` once William sends it. There's no robots.txt, because github.io only reads it at the domain root.
 - **Lighthouse:** `npm run lighthouse` fails locally on Windows (chrome-launcher EPERM). It runs in CI.
-- **Skills:** the global gitignore excludes `.claude/`, so skill files need `git add -f .claude/skills/<name>/SKILL.md`. Never add the whole folder.
+- **`.claude/` is gitignored globally.** Shared files need `git add -f <file>`: `skills/<name>/SKILL.md`, `agents/<name>.md`, `hooks/<name>.mjs`, `settings.json`. Never add the whole folder; `settings.local.json` stays local.
+
+## Hooks
+
+- With uncommitted changes, Claude can't finish until `check.sh` passes.
+- `enforce_admins` is off on `main`, so branch protection won't stop an admin push. The push guard hook is what does.
+- How each hook works: `.claude/settings.json` and the header comment in each `.claude/hooks/*.mjs`.

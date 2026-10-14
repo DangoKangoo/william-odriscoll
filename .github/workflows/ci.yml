@@ -24,9 +24,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run format:check
-      - run: npm run check
-      - run: npm run build
+      # The same script that defines "done" locally. Keep this job's name:
+      # branch protection requires "Format, types and build".
+      - run: bash scripts/check.sh
       - uses: actions/upload-artifact@v7
         with:
           name: dist

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/check.sh)",
+      "Bash(npm run check)",
+      "Bash(npm run build)",
+      "Bash(npm run format:check)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git branch --show-current)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh pr checks *)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Bash(git push --force*)",
+      "Bash(git push * --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * -f*)",
+      "Bash(git push * main)",
+      "Bash(git push * main *)",
+      "Bash(git push *:main)",
+      "Bash(git push *:main *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(rm -Rf *)",
+      "PowerShell(git push --force*)",
+      "PowerShell(git push * --force*)",
+      "PowerShell(git push -f*)",
+      "PowerShell(git push * -f*)",
+      "PowerShell(git push * main)",
+      "PowerShell(git push * main *)",
+      "PowerShell(git push *:main)",
+      "PowerShell(git push *:main *)",
+      "PowerShell(Remove-Item *-Recurse*)",
+      "PowerShell(Remove-Item -r *)",
+      "PowerShell(Remove-Item * -r *)",
+      "PowerShell(rm *-Recurse*)",
+      "PowerShell(rm -r *)",
+      "PowerShell(rm * -r *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard-push.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/format.mjs\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/stop-check.mjs\"",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

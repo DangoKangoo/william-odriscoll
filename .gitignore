@@ -6,3 +6,7 @@ dist/
 .env.*
 .DS_Store
 Thumbs.db
+# Claude Code's per-machine files. Listed here, not only in a global gitignore,
+# so the Stop hook and the em dash scan never count them as changes.
+.claude/settings.local.json
+.claude/worktrees/

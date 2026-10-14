@@ -171,3 +171,16 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - Open: the share image (`npm run brand`) still uses Manrope.
 - Hero: no label above the headline. "Hi, I'm Will O'Driscoll." then "I build websites for golf courses, simulators and shops", then "I'm a software engineer in St. John's. I design, build and look after every site myself, including online booking, stores and local search." Buttons: "See the work" and "Get in touch".
   **Why:** William's call. Naming clients in the intro read as small and unprofessional. The Work section shows them.
+
+## 2026-10-12: Agentic harness
+
+- `bash scripts/check.sh` is the definition of done: Prettier, `astro check`, build, and a scan for em dashes. CI's "Format, types and build" job runs it, so the required check keeps its name.
+- No unit tests or linter added.
+  **Why:** the build already fails on bad content or a missing screenshot, and a linter would mostly overlap `astro check`'s strict types. No new dependencies.
+- Non-trivial work: `align` writes `specs/<slug>.md`, `run-spec` builds it one task per fresh subagent, `ship` opens the PR. Clear, specific requests keep the fast path with no spec.
+- `align` asks only questions where a wrong guess changes the outcome. Every other default goes in the spec's Assumptions.
+- Subjective work gets 3 to 5 checkable quality criteria in its spec.
+- The `reviewer` agent is read-only, grades only the spec's acceptance and quality criteria, and cites evidence for every "met". `run-spec` allows 3 fix rounds, then stops and reports.
+- The PR skill stays `ship`; there is no separate `/pr`.
+- Hooks: Prettier on every edited file; every push blocked while on `main` (unless the same command first switches branch with `&&`), plus pushes to `main` and forced pushes from any branch; stopping blocked while `check.sh` fails on changed files (at most 3 blocks per turn, and an unchanged tree isn't re-checked).
+  **Why:** `enforce_admins` is off, so branch protection alone doesn't stop an admin push to `main`.
