@@ -59,8 +59,11 @@ function treeFingerprint() {
     .toString()
     .split("\0")
     .filter(Boolean);
-  for (const file of untracked)
-    hash.update(file).update(readFileSync(path.join(root, file)));
+  for (const file of untracked) {
+    hash.update(file);
+    // A nested repo is listed as `dir/`; it has no contents to read here.
+    if (!file.endsWith("/")) hash.update(readFileSync(path.join(root, file)));
+  }
   return hash.digest("hex");
 }
 

@@ -62,14 +62,15 @@ Options:
 1. Push: `git push -u origin <branch>` the first time, `git push` after that.
 2. Check for an existing PR: `gh pr view --json number,url`. If one exists,
    the push already updated it. Update its body with `gh pr edit` if the
-   summary changed, and skip to Step 5.
-3. Otherwise create it with `gh pr create --base main`. Body (the spec link
-   points at `main`: a branch link 404s once `--delete-branch` runs, and the
-   `main` one works from the merge on):
+   summary changed (refresh the spec link's commit too), and skip to Step 5.
+3. Otherwise create it with `gh pr create --base main`. Link the spec at the
+   pushed commit (`git rev-parse HEAD`): a commit link works while the PR is
+   open and after `--delete-branch`, where a branch link 404s after the merge
+   and a `main` link 404s before it. Body:
 
 ```
 ## Spec
-[specs/<slug>.md](https://github.com/DangoKangoo/william-odriscoll/blob/main/specs/<slug>.md)
+[specs/<slug>.md](https://github.com/DangoKangoo/william-odriscoll/blob/<commit>/specs/<slug>.md)
 (or "none, fast path")
 
 ## Changed
