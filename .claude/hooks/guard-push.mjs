@@ -40,7 +40,8 @@ const defaultBranch =
     /^origin\//,
     "",
   ) || "main";
-// After a switch that may have failed, the branch can't be known.
+// A switch whose target can't be read from the text (`git checkout x` may
+// restore a file, `git switch -` goes back).
 const UNKNOWN = Symbol("unknown branch");
 
 // Reads a word the way the shell would: quotes anywhere are dropped
@@ -69,10 +70,27 @@ const PUSH_OPTIONS_WITH_VALUE = new Set([
   "--exec",
 ]);
 
-// Every git command among the words: one segment can hold several, as in
-// `echo $(git rev-parse HEAD) $(git push --force)`.
-function gitCommands(words) {
-  const starts = words.flatMap((word, at) => (isGit(word) ? [at] : []));
+// A segment's words, read by the shell rules above, with the raw form kept.
+function tokens(segment) {
+  return segment
+    .trim()
+    .split(/\s+/)
+    .map((raw) => ({ raw, word: unwrap(raw) }))
+    .filter(({ word }) => word);
+}
+
+// Every git command in a segment. A git word starts one only in command
+// position: the segment's first git word, or one opening a substitution or
+// subshell, as in `echo $(git rev-parse HEAD) $(git push --force)`. So an
+// argument like `feat/git` doesn't cut a push short.
+function gitCommands(segmentTokens) {
+  const words = segmentTokens.map(({ word }) => word);
+  const opensCommand = (raw) => /^["']*[$`(]/.test(raw);
+  const starts = [];
+  segmentTokens.forEach(({ raw, word }, at) => {
+    if (isGit(word) && (starts.length === 0 || opensCommand(raw)))
+      starts.push(at);
+  });
   return starts.flatMap((start, n) => {
     const end = starts[n + 1] ?? words.length;
     let i = start + 1;
@@ -127,16 +145,24 @@ const isForceFlag = (flag) =>
 const targetsDefault = (refspec) =>
   new RegExp(`^\\+?([^:]*:)?(refs/heads/)?${defaultBranch}$`).test(refspec);
 
-function reasonToBlock(args, branch) {
-  if (branch === UNKNOWN)
-    return "a switch earlier in this command may have failed, so this could push from main. Run the switch and the push as separate commands";
-  if (branch === defaultBranch)
+const PUSHES_EVERY_BRANCH = ["--all", "--branches", "--mirror"];
+
+// `possible` is every branch the push might run on.
+function reasonToBlock(args, possible) {
+  if (
+    possible.has(UNKNOWN) ||
+    (possible.has(defaultBranch) && possible.size > 1)
+  )
+    return `a switch earlier in this command may have failed, so this could push from ${defaultBranch}. Run the switch and the push as separate commands`;
+  if (possible.has(defaultBranch))
     return `you're on ${defaultBranch}. Create a branch first`;
   const { flags, refspecs } = splitPushArgs(args);
   if (flags.some(isForceFlag) || refspecs.some((r) => r.startsWith("+")))
     return "force pushes are not allowed";
-  if (flags.some((f) => f === "--all" || f === "--mirror"))
-    return `--all and --mirror would push ${defaultBranch}`;
+  if (flags.some((f) => PUSHES_EVERY_BRANCH.includes(f)))
+    return `--all, --branches and --mirror would push ${defaultBranch}`;
+  if (refspecs.includes(":"))
+    return `the matching refspec ":" can push ${defaultBranch}`;
   if (refspecs.some((r) => r.includes("*")))
     return `wildcard refspecs can push ${defaultBranch}`;
   if (refspecs.some(targetsDefault))
@@ -145,14 +171,20 @@ function reasonToBlock(args, branch) {
 }
 
 // Walk the command in order. `parts` alternates segment, separator, segment.
+// Inside an `&&` chain, a switch is known to have worked when the next
+// command runs. Any other separator runs the next command either way, so
+// after it the branch from before the chain and every switch in it are all
+// possible.
 const parts = command.split(/(&&|\|\||[;|&\n])/);
-let branch = git("branch", "--show-current");
+let beforeChain = new Set([git("branch", "--show-current")]);
+let chainBranch;
+let chainSwitches = [];
 for (let p = 0; p < parts.length; p += 2) {
-  const words = parts[p].trim().split(/\s+/).map(unwrap).filter(Boolean);
-  let switched;
-  for (const gitCommand of gitCommands(words)) {
+  for (const gitCommand of gitCommands(tokens(parts[p]))) {
     if (gitCommand.subcommand === "push") {
-      const reason = reasonToBlock(gitCommand.args, branch);
+      const possible =
+        chainBranch === undefined ? beforeChain : new Set([chainBranch]);
+      const reason = reasonToBlock(gitCommand.args, possible);
       if (reason) {
         console.error(
           `Blocked by .claude/hooks/guard-push.mjs: ${reason}. Push a feature branch and open a PR with /ship.`,
@@ -160,11 +192,15 @@ for (let p = 0; p < parts.length; p += 2) {
         process.exit(2);
       }
     }
-    switched = switchTarget(gitCommand) ?? switched;
+    const target = switchTarget(gitCommand);
+    if (target !== undefined) {
+      chainBranch = target;
+      chainSwitches.push(target);
+    }
   }
-  // Only `&&` guarantees the switch succeeded before the next command runs.
-  if (switched !== undefined) {
-    const followedByAnd = parts[p + 1] === "&&";
-    branch = followedByAnd || switched === defaultBranch ? switched : UNKNOWN;
+  if (parts[p + 1] !== "&&") {
+    beforeChain = new Set([...beforeChain, ...chainSwitches]);
+    chainBranch = undefined;
+    chainSwitches = [];
   }
 }
