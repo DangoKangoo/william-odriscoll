@@ -13,6 +13,8 @@ interface Props {
 
 const { site, index } = Astro.props;
 const year = site.launched.slice(0, 4);
+// Plain-typed so astro check skips the @deprecated prop; browsers still hide the scrollbar.
+const hideScrollbar: Record<string, string> = { scrolling: "no" };
 ---
 
 <article class:list={["project", { "project--flip": index % 2 === 1 }]}>
@@ -39,7 +41,7 @@ const year = site.launched.slice(0, 4);
             loading="lazy"
             sandbox="allow-scripts allow-same-origin"
             referrerpolicy="no-referrer"
-            scrolling="no"
+            {...hideScrollbar}
             tabindex="-1"
             aria-hidden="true"
           ></iframe>
