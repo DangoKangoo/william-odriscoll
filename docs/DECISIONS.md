@@ -184,3 +184,9 @@ Confirmed through the `align` skill. Superseded decisions are struck through, ne
 - The PR skill stays `ship`; there is no separate `/pr`.
 - Hooks: Prettier on every edited file; every push blocked while on `main` (unless the same command first switches branch with `&&`), plus pushes to `main` and forced pushes from any branch; stopping blocked while `check.sh` fails on changed files (at most 3 blocks per turn, and an unchanged tree isn't re-checked).
   **Why:** `enforce_admins` is off, so branch protection alone doesn't stop an admin push to `main`.
+
+## 2026-10-12: SiteCard scrolling attribute
+
+- The live-preview iframes keep rendering `scrolling="no"`, written as a spread of a plain-typed attribute object so `astro check` stops flagging Astro's `@deprecated` prop. Spec: [specs/sitecard-scrolling.md](../specs/sitecard-scrolling.md).
+  **Why:** the attribute is obsolete in the HTML spec but browsers still honor it, and nothing standard hides a cross-origin page's scrollbar. Removing it would bring back the scrollbar that "Less template, more person" hides.
+- The spread makes Astro add an unused `class="astro-<hash>"` to each iframe. Accepted: nothing targets it, so the previews look the same.
